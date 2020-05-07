@@ -7,6 +7,7 @@ A simpler duties and taxes calculator prototype.
 - Forward and reverse calculations that don't fall into grey zones.
 - Weight based, rate based and fixed rate calculations.
 - Minimum payable and minimum collectible constraints.
+- Item excess.
 
 ## Current gaps
 
