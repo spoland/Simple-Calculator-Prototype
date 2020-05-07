@@ -38,7 +38,7 @@ Sample Contract:
 
 ## Configuration
 
-A sample calculator configuration:
+A sample calculator configuration (untested, just includes all current options):
 
 ```json
 
