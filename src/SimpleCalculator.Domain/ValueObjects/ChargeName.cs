@@ -13,7 +13,7 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// <param name="chargeName"></param>
         /// <param name="baseChargeName"></param>
         /// <returns></returns>
-        public static ChargeName FromParentChargeName(ChargeName chargeName, ChargeName baseChargeName)
+        public static ChargeName FromBaseChargeName(ChargeName chargeName, ChargeName baseChargeName)
         {
             if (chargeName.Value == ChargeNames.Item)
                 return new ChargeName(chargeName.Value);

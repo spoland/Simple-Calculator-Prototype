@@ -44,7 +44,7 @@ namespace SimpleCalculator.Domain.Calculators
                     {
                         var chargeAmount = baseChargeAmount.Charge * _getRate(item).AsDecimal;
 
-                        var chargeName = ChargeName.FromParentChargeName(_chargeName, baseChargeName);
+                        var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
 
                         item.AddCharge(new OrderCharge(chargeName, chargeAmount, _chargeName));
                     }
@@ -59,7 +59,7 @@ namespace SimpleCalculator.Domain.Calculators
                         if (baseChargeName.Value == "Item" || baseChargeName.Value == "Delivery")
                         {
                             item.ReverseRates.Add(new ReverseRate(
-                                name: ChargeName.FromParentChargeName(_chargeName, baseChargeName),
+                                name: ChargeName.FromBaseChargeName(_chargeName, baseChargeName),
                                 parentChargeName: _chargeName,
                                 rate: _getRate(item)));
                         }                           
@@ -82,7 +82,7 @@ namespace SimpleCalculator.Domain.Calculators
                                 var rate = _getRate(item).AsDecimal * reverseRate.Rate.AsDecimal * 100;
 
                                 var calculatedRate = new ReverseRate(
-                                     name: ChargeName.FromParentChargeName(_chargeName, reverseRate.Name),
+                                     name: ChargeName.FromBaseChargeName(_chargeName, reverseRate.Name),
                                      parentChargeName: _chargeName,
                                      rate: new Rate(rate));
 

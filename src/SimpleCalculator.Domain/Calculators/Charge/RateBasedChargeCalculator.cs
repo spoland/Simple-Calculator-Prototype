@@ -34,7 +34,7 @@ namespace SimpleCalculator.Domain.Calculators
                                         
                     var chargeAmount = baseChargeAmount.Charge * _getRate(item).AsDecimal;
                                         
-                    var chargeName = ChargeName.FromParentChargeName(_chargeName, baseChargeName);
+                    var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
                                         
                     item.AddCharge(new OrderCharge(chargeName, chargeAmount, _chargeName));
                 }                

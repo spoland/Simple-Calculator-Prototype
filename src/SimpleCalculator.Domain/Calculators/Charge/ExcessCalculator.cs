@@ -22,7 +22,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
         {
             ChargeName itemChargeName = ChargeNames.Item;
             ChargeName excessChargeName = ChargeNames.Excess;
-            ChargeName itemExcessChargeName = ChargeName.FromParentChargeName(excessChargeName, itemChargeName);
+            ChargeName itemExcessChargeName = ChargeName.FromBaseChargeName(excessChargeName, itemChargeName);
 
             if (!_excessApplied)
             {
