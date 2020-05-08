@@ -5,7 +5,6 @@ using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Exceptions;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;
-using SimpleCalculator.Domain.ValueObjects;
 
 namespace SimpleCalculator.Domain.Factories
 {
@@ -13,7 +12,7 @@ namespace SimpleCalculator.Domain.Factories
     {
         public delegate void Calculator(Order order);
 
-        public static Calculator? Create(CalculationRange range, Price? excess)
+        public static Calculator? Create(CalculationRange range, ExcessConfiguration? excess)
         {
             Calculator? calculatorDelegate = null;
             ExcessCalculator? excessCalculator = null;

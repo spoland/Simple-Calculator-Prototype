@@ -9,10 +9,7 @@ namespace SimpleCalculator.Domain.Options
         /// </summary>
         public string Id { get; set; } = string.Empty;
 
-        /// <summary>
-        /// The excess amount that is not chargeable.
-        /// </summary>
-        public string? Excess { get; set; } = null;
+        public ExcessConfigurationOptions? Excess { get; set; } = null;
 
         /// <summary>
         /// A list of charges that should be used when determining what the base price to use

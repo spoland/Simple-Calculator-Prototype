@@ -12,21 +12,22 @@ namespace SimpleCalculator.Domain.Calculators.Charge
     {
         private readonly Price _excessAmount;
         private bool _excessApplied;
+        private ChargeName _excessChargeName;
 
-        public ExcessCalculator(Price excessAmount)
+        public ExcessCalculator(ExcessConfiguration excessConfiguration)
         {
-            _excessAmount = excessAmount;
+            _excessAmount = excessConfiguration.Amount;
+            _excessChargeName = excessConfiguration.BaseCharge;
         }
 
         public void Calculate(Order order)
         {
-            ChargeName itemChargeName = ChargeNames.Item;
             ChargeName excessChargeName = ChargeNames.Excess;
-            ChargeName itemExcessChargeName = ChargeName.FromBaseChargeName(excessChargeName, itemChargeName);
+            ChargeName itemExcessChargeName = ChargeName.FromBaseChargeName(excessChargeName, _excessChargeName);
 
             if (!_excessApplied)
             {
-                var totalItemCharge = order.GetCharge(itemChargeName);
+                var totalItemCharge = order.GetCharge(_excessChargeName);
 
                 if (totalItemCharge.Charge > _excessAmount)
                 {
@@ -35,7 +36,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                         var itemExcessAmount = _excessAmount * order.RelativeItemValue(item).AsDecimal;
                         var itemExcessCharge = new OrderCharge(itemExcessChargeName, itemExcessAmount, new ChargeName("excess"));
 
-                        var itemCharge = item.GetCharge(itemChargeName);
+                        var itemCharge = item.GetCharge(_excessChargeName);
                         itemCharge.Charge -= itemExcessCharge.Charge;
 
                         item.AddCharge(itemExcessCharge);
@@ -49,7 +50,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                 foreach (var item in order.OrderItems)
                 {
                     var itemExcessCharge = item.GetCharge(itemExcessChargeName);
-                    var itemCharge = item.GetCharge(itemChargeName);
+                    var itemCharge = item.GetCharge(_excessChargeName);
                     
                     itemCharge.Charge += itemExcessCharge.Charge;
 

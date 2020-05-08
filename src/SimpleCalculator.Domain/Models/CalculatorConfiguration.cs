@@ -41,14 +41,21 @@ namespace SimpleCalculator.Domain.Models
             if (configurationGroups.Any(x => x.ToList().Select(x => x.Name).Distinct().Count() != x.ToList().Select(x => x.Name).Count()))
                 throw new InvalidChargeConfigurationException("Duplicate charge configurations have been specified in the same range.");
 
+            ExcessConfiguration? excessConfiguration = null;
+
+            if (calculatorConfigurationOptions.Excess != null)
+            {
+                excessConfiguration = ExcessConfiguration.FromOptions(calculatorConfigurationOptions.Excess);
+            }
+
             // Create calculation ranges
-            return new CalculatorConfiguration(CreateRanges(configurationGroups), calculatorConfigurationOptions.DeminimisBaseCharges, calculatorConfigurationOptions.Excess);
+            return new CalculatorConfiguration(CreateRanges(configurationGroups), calculatorConfigurationOptions.DeminimisBaseCharges, excessConfiguration);
         }
 
         /// <summary>
         /// The excess amount.
         /// </summary>
-        public Price? Excess { get; }
+        public ExcessConfiguration? Excess { get; }
 
         /// <summary>
         /// A collection of <see cref="CalculationRange"/> objects.
@@ -68,9 +75,9 @@ namespace SimpleCalculator.Domain.Models
         public CalculationRange GetRangeForBasePrice(Price basePrice) =>
             CalculationRanges.Reverse().First(x => basePrice >= x.DeminimisThreshold);
 
-        private CalculatorConfiguration(List<CalculationRange> calculationRanges, List<string> baseChargeNames, string? excess)
+        private CalculatorConfiguration(List<CalculationRange> calculationRanges, List<string> baseChargeNames, ExcessConfiguration? excess)
         {
-            Excess = excess ?? null as Price;
+            Excess = excess;
             _calculationRanges = calculationRanges;
             baseChargeNames.ForEach(chargeName => _deminimisBaseCharges.Add(new ChargeName(chargeName)));
         }

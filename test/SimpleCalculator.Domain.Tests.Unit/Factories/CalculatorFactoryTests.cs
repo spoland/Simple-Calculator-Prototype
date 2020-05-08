@@ -83,9 +83,10 @@ namespace SimpleCalculator.Domain.Tests.Unit
             });
 
             var calculationRange = new CalculationRange(new Price("EUR100"), new List<ChargeConfiguration> { chargeConfiguration1, chargeConfiguration2, chargeConfiguration3 });
+            var excessConfiguration = new ExcessConfiguration("Item", "EUR10");
 
             // Act
-            var calculator = ForwardCalculatorFactory.Create(calculationRange, new Price("EUR10")).GetInvocationList();
+            var calculator = ForwardCalculatorFactory.Create(calculationRange, excessConfiguration).GetInvocationList();
 
             // Assert
             calculator.Should().HaveCount(5);
