@@ -14,14 +14,11 @@ namespace SimpleCalculator.Domain.Models
     /// </summary>
     public class CalculatorConfiguration
     {
-        private List<ChargeName> _deminimisBaseCharges = new List<ChargeName>();
-        private List<CalculationRange> _calculationRanges = new List<CalculationRange>();
-        
         /// <summary>
         /// Creates a new <see cref="CalculatorConfiguration"/> based on a <see cref="CalculatorConfigurationOptions"/> object.
         /// </summary>
         /// <param name="calculatorConfigurationOptions">The calculator configuration options.</param>
-        public static CalculatorConfiguration CreateFromOptions(CalculatorConfigurationOptions calculatorConfigurationOptions)
+        public CalculatorConfiguration(CalculatorConfigurationOptions calculatorConfigurationOptions)
         {
             if (!calculatorConfigurationOptions.ChargeConfigurations.Any())
                 throw new ArgumentException("At least one configuration must exist in order to perform a calculation.");
@@ -48,8 +45,9 @@ namespace SimpleCalculator.Domain.Models
                 excessConfiguration = ExcessConfiguration.FromOptions(calculatorConfigurationOptions.Excess);
             }
 
-            // Create calculation ranges
-            return new CalculatorConfiguration(CreateRanges(configurationGroups), calculatorConfigurationOptions.DeminimisBaseCharges, excessConfiguration);
+            Excess = excessConfiguration;
+            CalculationRanges = CreateRanges(configurationGroups);
+            DeminimisBaseCharges = calculatorConfigurationOptions.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
         }
 
         /// <summary>
@@ -60,12 +58,12 @@ namespace SimpleCalculator.Domain.Models
         /// <summary>
         /// A collection of <see cref="CalculationRange"/> objects.
         /// </summary>
-        public IEnumerable<CalculationRange> CalculationRanges => _calculationRanges;
+        public IEnumerable<CalculationRange> CalculationRanges { get; }
 
         /// <summary>
         /// A collection of the names of the charges which make up the base price for calculations.
         /// </summary>
-        public IEnumerable<ChargeName> DeminimisBaseCharges => _deminimisBaseCharges;
+        public IEnumerable<ChargeName> DeminimisBaseCharges { get; }
 
         /// <summary>
         /// Get the correct <see cref="CalculationRange"/> for a base price.
@@ -75,14 +73,7 @@ namespace SimpleCalculator.Domain.Models
         public CalculationRange GetRangeForBasePrice(Price basePrice) =>
             CalculationRanges.Reverse().First(x => basePrice >= x.DeminimisThreshold);
 
-        private CalculatorConfiguration(List<CalculationRange> calculationRanges, List<string> baseChargeNames, ExcessConfiguration? excess)
-        {
-            Excess = excess;
-            _calculationRanges = calculationRanges;
-            baseChargeNames.ForEach(chargeName => _deminimisBaseCharges.Add(new ChargeName(chargeName)));
-        }
-
-        private static List<CalculationRange> CreateRanges(List<IGrouping<Price, ChargeConfiguration>> configurationGroups)
+        private List<CalculationRange> CreateRanges(List<IGrouping<Price, ChargeConfiguration>> configurationGroups)
         {
             // Create range list and add the first range
             List<CalculationRange> deminimisRanges = new List<CalculationRange>
@@ -119,6 +110,5 @@ namespace SimpleCalculator.Domain.Models
 
             return deminimisRanges;
         }
-
     }
 }

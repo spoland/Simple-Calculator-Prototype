@@ -45,7 +45,7 @@ namespace SimpleCalculator.Api.Controllers
                 currency: new Currency(requestDto.CurrencyIso),
                 orderItems: orderItems);
 
-            var calculatorConfiguration = CalculatorConfiguration.CreateFromOptions(_options.Single(x => x.Id == requestDto.CountryIso));
+            var calculatorConfiguration = new CalculatorConfiguration(_options.Single(x => x.Id == requestDto.CountryIso));
 
             var request = new ForwardCalculatorRequest(order, calculatorConfiguration);
             var response = await _mediator.Send(request);
@@ -71,7 +71,7 @@ namespace SimpleCalculator.Api.Controllers
                 orderItems: orderItems
             );
 
-            var calculatorConfiguration = CalculatorConfiguration.CreateFromOptions(_options.Single(x => x.Id == requestDto.CountryIso));
+            var calculatorConfiguration = new CalculatorConfiguration(_options.Single(x => x.Id == requestDto.CountryIso));
 
             var request = new ReverseCalculatorRequest(order, calculatorConfiguration);
             var response = await _mediator.Send(request);

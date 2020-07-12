@@ -26,7 +26,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            Action create = () => CalculatorConfiguration.CreateFromOptions(calculatorConfiguration);
+            Action create = () => new CalculatorConfiguration(calculatorConfiguration);
 
             // Assert
             create.Should().Throw<ArgumentException>();
@@ -60,7 +60,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            Action create = () => CalculatorConfiguration.CreateFromOptions(calculatorConfiguration);
+            Action create = () => new CalculatorConfiguration(calculatorConfiguration);
 
             // Assert
             create.Should().Throw<Exception>();
@@ -109,7 +109,9 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            var calculationRanges = CalculatorConfiguration.CreateFromOptions(calculatorConfiguration).CalculationRanges.ToList();
+            var calculationRanges = new CalculatorConfiguration(calculatorConfiguration)
+                .CalculationRanges
+                .ToList();
 
             // Assert
             calculationRanges.Should().HaveCount(4);
@@ -192,7 +194,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            var configuration = CalculatorConfiguration.CreateFromOptions(configurationOptions);
+            var configuration = new CalculatorConfiguration(configurationOptions);
             var calculationRange = configuration.CalculationRanges.Single().ChargeConfigurations.ToList();
 
             // Assert
@@ -240,7 +242,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            var calculationRanges = CalculatorConfiguration.CreateFromOptions(configurationOptions).CalculationRanges.ToList();
+            var calculationRanges = new CalculatorConfiguration(configurationOptions).CalculationRanges.ToList();
 
             // Assert
             calculationRanges[0].ChargeConfigurations.Single().As<FixedRateChargeConfiguration>().FixedChargeAmount.ToString().Should().Be("EUR10");
@@ -278,7 +280,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            Action create = () => CalculatorConfiguration.CreateFromOptions(configurationOptions);
+            Action create = () => new CalculatorConfiguration(configurationOptions);
 
             // Assert
             create.Should().Throw<InvalidChargeConfigurationException>()
@@ -320,7 +322,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
             };
 
             // Act
-            var configurations = CalculatorConfiguration.CreateFromOptions(configurationOptions)
+            var configurations = new CalculatorConfiguration(configurationOptions)
                 .CalculationRanges
                 .Single()
                 .ChargeConfigurations;
@@ -374,7 +376,7 @@ namespace SimpleCalculator.Domain.Tests.Unit
                 }
             };
 
-            var calculationRanges = CalculatorConfiguration.CreateFromOptions(configurationOptions);
+            var calculationRanges = new CalculatorConfiguration(configurationOptions);
 
             // Act
             var range = calculationRanges.GetRangeForBasePrice(new Price(price));
