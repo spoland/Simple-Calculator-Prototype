@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using SimpleCalculator.Api.Commands;
 using SimpleCalculator.Api.Contracts;
 using SimpleCalculator.Api.RequestHandlers;
 using SimpleCalculator.Domain.Entities;
@@ -55,9 +54,9 @@ namespace SimpleCalculator.Api.Controllers
         }
 
         [HttpPost("reverse")]
-        public ActionResult<IEnumerable<OrderChargeDto>> ReverseCalculate(OrderDto request)
+        public async Task<ActionResult<IEnumerable<OrderChargeDto>>> ReverseCalculate(OrderDto requestDto)
         {
-            var orderItems = request.OrderItems.Select(oi =>
+            var orderItems = requestDto.OrderItems.Select(oi =>
                     new OrderItem(
                         quantity: new Quantity(oi.Quantity),
                         weight: Weight.InKilograms(oi.Weight),
@@ -67,14 +66,17 @@ namespace SimpleCalculator.Api.Controllers
                 .ToList();
 
             var order = new Order(
-                country: new Country(request.CountryIso),
-                currency: new Currency(request.CurrencyIso),
+                country: new Country(requestDto.CountryIso),
+                currency: new Currency(requestDto.CurrencyIso),
                 orderItems: orderItems
             );
 
-            ReverseCalculateCommand.Execute(order, _options.Single(x => x.Id == request.CountryIso));
+            var calculatorConfiguration = CalculatorConfiguration.CreateFromOptions(_options.Single(x => x.Id == requestDto.CountryIso));
 
-            return new OkObjectResult(order.Charges.OrderBy(c => c.BaseChargeName.Value).Select(c => new OrderChargeDto(c.ChargeName, c.ChargeAmount)));
+            var request = new ReverseCalculatorRequest(order, calculatorConfiguration);
+            var response = await _mediator.Send(request);
+
+            return new OkObjectResult(response);
         }
     }
 }
