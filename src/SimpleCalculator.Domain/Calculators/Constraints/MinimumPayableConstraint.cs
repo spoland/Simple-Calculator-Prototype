@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.ValueObjects;
 
 namespace SimpleCalculator.Domain.Calculators.Constraints
@@ -25,13 +26,13 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
 
             var appliedCharge = order.GetTotalCharge(_chargeName);
 
-            if (appliedCharge.Charge < _minimumPayable)
+            if (appliedCharge.ChargeAmount < _minimumPayable)
             {
                 foreach(var item in order.OrderItems)
                 {
                     item.RemoveCharge(_chargeName);
 
-                    var minimumItemCharge = _minimumPayable * order.RelativeItemValue(item).AsDecimal;
+                    var minimumItemCharge = _minimumPayable * item.CostRelativeToOrderTotal;
 
                     item.AddCharge(new OrderCharge(_chargeName, minimumItemCharge, _chargeName));
                 }

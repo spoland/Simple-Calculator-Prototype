@@ -1,20 +1,21 @@
-﻿using SimpleCalculator.Domain.ValueObjects;
+﻿using SimpleCalculator.Domain.Abstractions;
+using System.Collections.Generic;
 
-namespace SimpleCalculator.Domain.Models
+namespace SimpleCalculator.Domain.ValueObjects
 {
-    public class ReverseRate
+    public class ReverseRate : ValueObject
     {
         public ReverseRate(ChargeName name, ChargeName parentChargeName, Rate rate)
         {
-            Name = name;
-            ParentChargeName = parentChargeName;
+            ChargeName = name;
+            BaseChargeName = parentChargeName;
             Rate = rate;
         }
 
         /// <summary>
         /// The charge name that this reverse rate can be used to reverse out (duty, tax etc.).
         /// </summary>
-        public ChargeName Name { get; }
+        public ChargeName ChargeName { get; }
 
         /// <summary>
         /// The parent charge name.
@@ -23,11 +24,18 @@ namespace SimpleCalculator.Domain.Models
         /// rate name will be Vat. This is useful when trying to group all vat related rates together
         /// during forward and/or reverse calculations.
         /// </summary>
-        public ChargeName ParentChargeName { get; }
+        public ChargeName BaseChargeName { get; }
 
         /// <summary>
         /// The rate value that was applied.
         /// </summary>
         public Rate Rate { get; }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return ChargeName;
+            yield return BaseChargeName;
+            yield return Rate;
+        }
     }
 }

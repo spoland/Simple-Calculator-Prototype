@@ -1,4 +1,6 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
+using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -40,9 +42,9 @@ namespace SimpleCalculator.Domain.Calculators
                     // Check to see if a charge has been calculated for this charge type.
                     // If so, do a forward calculation - the calculated charges can be removed from the 
                     // inclusive price before applying the reverse rate as they are known.
-                    if (baseChargeAmount.Charge.Amount != 0)
+                    if (baseChargeAmount.ChargeAmount.Amount != 0)
                     {
-                        var chargeAmount = baseChargeAmount.Charge * _getRate(item).AsDecimal;
+                        var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;
 
                         var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
 
@@ -58,7 +60,7 @@ namespace SimpleCalculator.Domain.Calculators
                         // identifying these 'non calculated' rates types of charges that would be more flexible.
                         if (baseChargeName.Value == "Item" || baseChargeName.Value == "Delivery")
                         {
-                            item.ReverseRates.Add(new ReverseRate(
+                            item.AddReverseRate(new ReverseRate(
                                 name: ChargeName.FromBaseChargeName(_chargeName, baseChargeName),
                                 parentChargeName: _chargeName,
                                 rate: _getRate(item)));
@@ -77,16 +79,16 @@ namespace SimpleCalculator.Domain.Calculators
                             // fee rate, the fee on duty rate and the fee on vat rate. This is done by querying the
                             // rates collection by 'parent' charge. In this example, all rates would have a parent charge
                             // of fee.
-                            foreach(var reverseRate in reverseRates.Where(x => x.ParentChargeName == baseChargeName))
+                            foreach(var reverseRate in reverseRates.Where(x => x.BaseChargeName == baseChargeName))
                             {                                
                                 var rate = _getRate(item).AsDecimal * reverseRate.Rate.AsDecimal * 100;
 
                                 var calculatedRate = new ReverseRate(
-                                     name: ChargeName.FromBaseChargeName(_chargeName, reverseRate.Name),
+                                     name: ChargeName.FromBaseChargeName(_chargeName, reverseRate.ChargeName),
                                      parentChargeName: _chargeName,
                                      rate: new Rate(rate));
 
-                                item.ReverseRates.Add(calculatedRate);
+                                item.AddReverseRate(calculatedRate);
                             }                            
                         }
                     }

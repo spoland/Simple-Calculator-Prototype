@@ -1,4 +1,6 @@
-﻿using SimpleCalculator.Domain.Constants;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 
@@ -29,15 +31,15 @@ namespace SimpleCalculator.Domain.Calculators.Charge
             {
                 var totalItemCharge = order.GetCharge(_excessChargeName);
 
-                if (totalItemCharge.Charge > _excessAmount)
+                if (totalItemCharge.ChargeAmount > _excessAmount)
                 {
                     foreach(var item in order.OrderItems)
                     {
-                        var itemExcessAmount = _excessAmount * order.RelativeItemValue(item).AsDecimal;
+                        var itemExcessAmount = _excessAmount * item.CostRelativeToOrderTotal;
                         var itemExcessCharge = new OrderCharge(itemExcessChargeName, itemExcessAmount, new ChargeName("excess"));
 
                         var itemCharge = item.GetCharge(_excessChargeName);
-                        itemCharge.Charge -= itemExcessCharge.Charge;
+                        itemCharge.ChargeAmount -= itemExcessCharge.ChargeAmount;
 
                         item.AddCharge(itemExcessCharge);
                     }
@@ -52,7 +54,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                     var itemExcessCharge = item.GetCharge(itemExcessChargeName);
                     var itemCharge = item.GetCharge(_excessChargeName);
                     
-                    itemCharge.Charge += itemExcessCharge.Charge;
+                    itemCharge.ChargeAmount += itemExcessCharge.ChargeAmount;
 
                     item.RemoveCharge(itemExcessChargeName);
                 }

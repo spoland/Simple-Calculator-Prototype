@@ -2,28 +2,31 @@
 using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace SimpleCalculator.Domain.Models
 {
     public class OrderItem
     {
         private readonly List<OrderCharge> _charges;
+        private readonly List<ReverseRate> _reverseRates;
 
         public OrderItem(
             Quantity quantity,
             Weight weight,
             Rate vatRate,
             Rate dutyRate,
-            Price price)
+            Price inputPrice)
         {
             Weight = weight;
             Quantity = quantity;
             VatRate = vatRate;
             DutyRate = dutyRate;
-            Price = price;
+            Price = inputPrice;
 
             _charges = new List<OrderCharge>();
+            _reverseRates = new List<ReverseRate>();
+
+            _charges.Add(new OrderCharge(ChargeNames.InputItem, inputPrice));
         }
 
         /// <summary>
@@ -55,7 +58,7 @@ namespace SimpleCalculator.Domain.Models
         /// A collection of reverse rates that have been calculated during a reverse calculation.
         /// Make readonly and add method for adding/removing.
         /// </summary>
-        public List<ReverseRate> ReverseRates { get; set; } = new List<ReverseRate>();
+        public IEnumerable<ReverseRate> ReverseRates => _reverseRates;
 
         /// <summary>
         /// The charges collection.
@@ -70,11 +73,12 @@ namespace SimpleCalculator.Domain.Models
         /// <returns></returns>
         public OrderCharge GetTotalCharge(ChargeName chargeName)
         {
-            var chargeAmount = Charges.Where(c => c.ParentChargeName == chargeName)
-                .Select(x => x.Charge)
+            var chargeAmount = Charges
+                .Where(c => c.BaseChargeName == chargeName || c.BaseChargeName == ChargeName.Empty && c.ChargeName == chargeName)
+                .Select(x => x.ChargeAmount)
                 .Sum();
 
-            return new OrderCharge(chargeName, chargeAmount, chargeName);
+            return new OrderCharge(chargeName, chargeAmount);
         }
 
         public void AddCharge(OrderCharge charge)
@@ -84,29 +88,41 @@ namespace SimpleCalculator.Domain.Models
 
         public OrderCharge GetCharge(ChargeName chargeName)
         {
-            return Charges.Single(c => c.Name == chargeName);
+            return Charges.Single(c => c.ChargeName == chargeName);
         }
 
         public OrderCharge GetTotalCalculatedCharge()
         {
-            var totalCharge = _charges.Where(x => !x.Name.Value.Contains("Input")).Select(x => x.Charge).Sum();
+            var totalCharge = _charges.Where(x => !x.ChargeName.Value.Contains("Input")).Select(x => x.ChargeAmount).Sum();
             return new OrderCharge("Total", totalCharge, "Total");
         }
 
         public void RemoveCharge(ChargeName chargeName)
         {
-            _charges.RemoveAll(x => x.Name == chargeName || x.ParentChargeName == chargeName);
+            _charges.RemoveAll(x => x.ChargeName == chargeName || x.BaseChargeName == chargeName);
         }
 
         public void ResetCalculationProperties()
         {
-            _charges.RemoveAll(x => x.Name.Value != ChargeNames.InputItem);
-            ReverseRates.Clear();
+            _charges.RemoveAll(x => x.ChargeName.Value != ChargeNames.InputItem);
+            _reverseRates.Clear();
         }
 
         public void ResetKnownCharges()
         {
-            _charges.RemoveAll(x => x.Name.Value != ChargeNames.InputItem && x.Name.Value != ChargeNames.Item);
+            _charges.RemoveAll(x => x.ChargeName.Value != ChargeNames.InputItem && x.ChargeName.Value != ChargeNames.Item);
         }
+
+        public void SetCostRelativeToOrderTotal(Price totalOrderPrice)
+        {
+            CostRelativeToOrderTotal = _charges.Single(x => x.ChargeName.Value == ChargeNames.InputItem).ChargeAmount.Amount / totalOrderPrice.Amount;
+        }
+
+        public void AddReverseRate(ReverseRate reverseRate) => _reverseRates.Add(reverseRate);
+
+        /// <summary>
+        /// Gets the cost of this item relative to the total of all of the order item prices in the order.
+        /// </summary>
+        internal decimal CostRelativeToOrderTotal { get; set; }
     }
 }

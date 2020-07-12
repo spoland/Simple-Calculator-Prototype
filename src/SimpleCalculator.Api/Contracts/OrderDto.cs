@@ -1,4 +1,4 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Entities;
 using System.Collections.Generic;
 using System.Linq;
 

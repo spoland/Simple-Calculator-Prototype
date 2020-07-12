@@ -1,6 +1,8 @@
-﻿using SimpleCalculator.Domain.Calculators;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Calculators;
 using SimpleCalculator.Domain.Calculators.Charge;
 using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Exceptions;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;

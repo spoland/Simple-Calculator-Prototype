@@ -1,6 +1,6 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Entities;
 
-namespace SimpleCalculator.Domain.Calculators
+namespace SimpleCalculator.Domain.Abstractions
 {
     public interface IChargeCalculator
     {

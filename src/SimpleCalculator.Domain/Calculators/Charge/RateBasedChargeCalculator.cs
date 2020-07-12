@@ -1,4 +1,6 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
+using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -29,10 +31,10 @@ namespace SimpleCalculator.Domain.Calculators
                 {
                     var baseChargeAmount = item.GetTotalCharge(baseChargeName);
 
-                    if (baseChargeAmount.Charge.Amount == 0)
+                    if (baseChargeAmount.ChargeAmount.Amount == 0)
                         continue;
                                         
-                    var chargeAmount = baseChargeAmount.Charge * _getRate(item).AsDecimal;
+                    var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;
                                         
                     var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
                                         

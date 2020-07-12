@@ -1,11 +1,10 @@
 ﻿using SimpleCalculator.Domain.Abstractions;
-using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace SimpleCalculator.Domain.Models
+namespace SimpleCalculator.Domain.ValueObjects
 {
-    [DebuggerDisplay("{Name}{Charge}")]
+    [DebuggerDisplay("{Name}{ChargeName}")]
     public class OrderCharge : ValueObject
     {
         /// <summary>
@@ -13,19 +12,19 @@ namespace SimpleCalculator.Domain.Models
         /// </summary>
         /// <param name="name"></param>
         /// <param name="amount"></param>
-        /// <param name="parentChargeName"></param>
-        public OrderCharge(ChargeName name, Price amount, ChargeName parentChargeName)
+        /// <param name="baseChargeName"></param>
+        public OrderCharge(ChargeName name, Price amount, ChargeName? baseChargeName = null)
         {
-            Name = name;
-            ParentChargeName = parentChargeName;
+            ChargeName = name;
+            BaseChargeName = baseChargeName ?? ChargeName.Empty;
 
-            Charge = amount;
+            ChargeAmount = amount;
         }
 
         /// <summary>
         /// The charge name (duty, tax etc.)
         /// </summary>
-        public ChargeName Name { get; }
+        public ChargeName ChargeName { get; }
 
         /// <summary>
         /// The parent charge name.
@@ -34,18 +33,18 @@ namespace SimpleCalculator.Domain.Models
         /// charge name will be Vat. This is useful when trying to group all vat related rates together
         /// during forward and/or reverse calculations.
         /// </summary>
-        public ChargeName ParentChargeName { get; }
+        public ChargeName BaseChargeName { get; }
 
         /// <summary>
         /// The charge.
         /// </summary>
-        public Price Charge { get; set; }
+        public Price ChargeAmount { get; set; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Name;
-            yield return Charge;
-            yield return ParentChargeName;
+            yield return ChargeName;
+            yield return ChargeAmount;
+            yield return BaseChargeName;
         }
     }
 }

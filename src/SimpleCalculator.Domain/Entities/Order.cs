@@ -1,26 +1,28 @@
 ﻿using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleCalculator.Domain.Models
+namespace SimpleCalculator.Domain.Entities
 {
     public class Order
     {
-        private readonly Price _totalOrderPrice;
-
-        public Order(Country countryIso, Currency currencyIso, IEnumerable<OrderItem> orderItems)
+        public Order(Country country, Currency currency, List<OrderItem> orderItems)
         {
-            CountryIso = countryIso;
-            CurrencyIso = currencyIso;
-            OrderItems = orderItems;
+            CountryIso = country;
+            CurrencyIso = currency;
 
-            _totalOrderPrice = orderItems
+            var totalOrderPrice = orderItems
                 .SelectMany(x => x.Charges)
-                .Where(x => x.Name.Value == ChargeNames.InputItem)
-                .Select(c => c.Charge)
+                .Where(x => x.ChargeName.Value == ChargeNames.InputItem)
+                .Select(c => c.ChargeAmount)
                 .Sum();
+
+            foreach (var item in orderItems) item.SetCostRelativeToOrderTotal(totalOrderPrice);
+
+            OrderItems = orderItems;
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -58,7 +60,7 @@ namespace SimpleCalculator.Domain.Models
         /// <returns></returns>
         public OrderCharge GetCharge(ChargeName chargeName)
         {
-            var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).Charge).Sum();
+            var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
             return new OrderCharge(chargeName, chargeAmount, chargeName);
         }
 
@@ -70,18 +72,15 @@ namespace SimpleCalculator.Domain.Models
         /// <returns></returns>
         public OrderCharge GetTotalCharge(ChargeName chargeName)
         {
-            var chargeAmount = OrderItems.Select(oi => oi.GetTotalCharge(chargeName).Charge).Sum();
+            var chargeAmount = OrderItems.Select(oi => oi.GetTotalCharge(chargeName).ChargeAmount).Sum();
             return new OrderCharge(chargeName, chargeAmount, chargeName);
         }
 
         public OrderCharge GetTotalCalculatedCharge()
         {
-            var totalOrderCharges = OrderItems.Select(oi => oi.GetTotalCalculatedCharge()).Select(x => x.Charge).Sum();
+            var totalOrderCharges = OrderItems.Select(oi => oi.GetTotalCalculatedCharge()).Select(x => x.ChargeAmount).Sum();
             return new OrderCharge("Total", totalOrderCharges, "Total");
         }
-
-        public Rate RelativeItemValue(OrderItem orderItem)
-            => new Rate(orderItem.GetCharge(ChargeNames.InputItem).Charge.Amount / _totalOrderPrice.Amount * 100);
 
         public void ResetCalculationProperties()
         {

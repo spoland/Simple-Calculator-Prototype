@@ -1,4 +1,5 @@
 ﻿using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Options;
@@ -34,10 +35,10 @@ namespace SimpleCalculator.Api.Commands
                 var totalCharge = order.GetTotalCalculatedCharge();
 
                 // Determine deminimis base
-                var deminimisBase = order.Charges.Where(chargeName => calculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.Name))
-                    .Select(x => x.Charge.Amount).Sum();
+                var deminimisBase = order.Charges.Where(chargeName => calculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
+                    .Select(x => x.ChargeAmount.Amount).Sum();
                 
-                if (inputCharge.Charge == totalCharge.Charge && new Price(order.CurrencyIso, deminimisBase) >= range.DeminimisThreshold)
+                if (inputCharge.ChargeAmount == totalCharge.ChargeAmount && new Price(order.CurrencyIso, deminimisBase) >= range.DeminimisThreshold)
                     break;
 
                 // if charges don't match reset and run again

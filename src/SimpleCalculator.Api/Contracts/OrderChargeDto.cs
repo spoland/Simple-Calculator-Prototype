@@ -1,4 +1,4 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.ValueObjects;
 
 namespace SimpleCalculator.Api.Contracts
 {
@@ -9,8 +9,8 @@ namespace SimpleCalculator.Api.Contracts
 
         public OrderChargeDto(OrderCharge charge)
         {
-            Name = charge.Name.Value;
-            Amount = charge.Charge.ToString();
+            Name = charge.ChargeName.Value;
+            Amount = charge.ChargeAmount.ToString();
         }
 
         public string Name { get; set; } = string.Empty;

@@ -1,4 +1,6 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
+using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 
@@ -19,7 +21,7 @@ namespace SimpleCalculator.Domain.Calculators
         {
             foreach (var item in order.OrderItems)
             {
-                var chargeAmount = item.Weight.Value * _getRate(item).Value * item.Quantity.Value;
+                var chargeAmount = item.Weight.Value * _getRate(item).AsDecimal * item.Quantity.Value;
                 item.AddCharge(new OrderCharge(_chargeName, new Price(order.CurrencyIso, chargeAmount), _chargeName));
             }
         }

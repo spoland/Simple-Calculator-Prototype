@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Factories;
+﻿using SimpleCalculator.Domain.Entities;
+using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
@@ -18,8 +19,8 @@ namespace SimpleCalculator.Api.Commands
             var calculatorConfiguration = CalculatorConfiguration.CreateFromOptions(_options);
 
             // Determine deminimis base
-            var deminimisBase = order.Charges.Where(chargeName => calculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.Name))
-                .Select(x => x.Charge.Amount).Sum();
+            var deminimisBase = order.Charges.Where(chargeName => calculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
+                .Select(x => x.ChargeAmount.Amount).Sum();
 
             // Get the correct range for the base price
             var range = calculatorConfiguration.GetRangeForBasePrice(new Price(order.CurrencyIso, deminimisBase));

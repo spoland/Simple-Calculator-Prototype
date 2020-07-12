@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SimpleCalculator.Domain\SimpleCalculator.Domain.csproj" />
+    <ProjectReference Include="..\SimpleCalculator.Tests.Shared\SimpleCalculator.Tests.Shared.csproj" />
   </ItemGroup>
 
 </Project>

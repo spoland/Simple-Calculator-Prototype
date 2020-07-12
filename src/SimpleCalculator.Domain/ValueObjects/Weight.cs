@@ -4,7 +4,7 @@ namespace SimpleCalculator.Domain.ValueObjects
 {
     public class Weight
     {
-        public static Weight InKilogrames(decimal value)
+        public static Weight InKilograms(decimal value)
         {
             return new Weight(value);
         }

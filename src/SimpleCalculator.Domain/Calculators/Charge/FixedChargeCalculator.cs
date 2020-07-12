@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.ValueObjects;
 
 namespace SimpleCalculator.Domain.Calculators
@@ -18,7 +19,7 @@ namespace SimpleCalculator.Domain.Calculators
         {
             foreach (var item in order.OrderItems)
             {
-                var chargeAmount = _amount * order.RelativeItemValue(item).AsDecimal;
+                var chargeAmount = _amount * item.CostRelativeToOrderTotal;
                 item.AddCharge(new OrderCharge(_chargeName, chargeAmount, _chargeName));
             }
         }

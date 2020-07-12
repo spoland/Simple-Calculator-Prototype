@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using SimpleCalculator.Api.Commands;
 using SimpleCalculator.Api.Contracts;
 using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
@@ -29,10 +30,10 @@ namespace SimpleCalculator.Api.Controllers
             var orderItems = request.OrderItems.Select(oi =>
                 new OrderItem(
                     quantity: new Quantity(oi.Quantity),
-                    weight: Weight.InKilogrames(oi.Weight),
+                    weight: Weight.InKilograms(oi.Weight),
                     vatRate: new Rate(oi.VatRate),
                     dutyRate: new Rate(oi.DutyRate),
-                    price: new Price(oi.Price)))
+                    inputPrice: new Price(oi.Price)))
                 .ToList();
             
             orderItems.ForEach(oi =>
@@ -42,13 +43,13 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                countryIso: new Country(request.CountryIso),
-                currencyIso: new Currency(request.CurrencyIso),
+                country: new Country(request.CountryIso),
+                currency: new Currency(request.CurrencyIso),
                 orderItems: orderItems);
 
             ForwardCalculateCommand.Execute(order, _options.Single(x => x.Id == request.CountryIso));
 
-            return new OkObjectResult(order.Charges.OrderBy(c => c.ParentChargeName.Value).Select(c => new OrderChargeDto(c)));
+            return new OkObjectResult(order.Charges.OrderBy(c => c.BaseChargeName.Value).Select(c => new OrderChargeDto(c)));
         }
 
         [HttpPost("reverse")]
@@ -57,10 +58,10 @@ namespace SimpleCalculator.Api.Controllers
             var orderItems = request.OrderItems.Select(oi =>
                     new OrderItem(
                         quantity: new Quantity(oi.Quantity),
-                        weight: Weight.InKilogrames(oi.Weight),
+                        weight: Weight.InKilograms(oi.Weight),
                         vatRate: new Rate(oi.VatRate),
                         dutyRate: new Rate(oi.DutyRate),
-                        price: new Price(oi.Price)))
+                        inputPrice: new Price(oi.Price)))
                 .ToList();
 
             orderItems.ForEach(oi =>
@@ -69,14 +70,14 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                countryIso: new Country(request.CountryIso),
-                currencyIso: new Currency(request.CurrencyIso),
+                country: new Country(request.CountryIso),
+                currency: new Currency(request.CurrencyIso),
                 orderItems: orderItems
             );
 
             ReverseCalculateCommand.Execute(order, _options.Single(x => x.Id == request.CountryIso));
 
-            return new OkObjectResult(order.Charges.OrderBy(c => c.ParentChargeName.Value).Select(c => new OrderChargeDto(c)));
+            return new OkObjectResult(order.Charges.OrderBy(c => c.BaseChargeName.Value).Select(c => new OrderChargeDto(c)));
         }
     }
 }

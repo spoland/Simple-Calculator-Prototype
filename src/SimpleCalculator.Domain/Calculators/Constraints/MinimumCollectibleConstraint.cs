@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Models;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.ValueObjects;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
 
             var appliedCharge = order.GetTotalCharge(_chargeName);
                             
-            if (appliedCharge.Charge < _minimumCollectible)
+            if (appliedCharge.ChargeAmount < _minimumCollectible)
             {
                 order.OrderItems.ToList().ForEach(oi => oi.RemoveCharge(_chargeName));
             }

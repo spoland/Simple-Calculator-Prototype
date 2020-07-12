@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCalculator.Domain", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCalculator.Domain.Tests.Unit", "test\SimpleCalculator.Domain.Tests.Unit\SimpleCalculator.Domain.Tests.Unit.csproj", "{9E3EAE04-68ED-4B10-A863-2BAC663365C9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleCalculator.Tests.Shared", "test\SimpleCalculator.Tests.Shared\SimpleCalculator.Tests.Shared.csproj", "{681AC9DB-3364-4221-80AC-9815157F2748}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{9E3EAE04-68ED-4B10-A863-2BAC663365C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E3EAE04-68ED-4B10-A863-2BAC663365C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E3EAE04-68ED-4B10-A863-2BAC663365C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{681AC9DB-3364-4221-80AC-9815157F2748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{681AC9DB-3364-4221-80AC-9815157F2748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{681AC9DB-3364-4221-80AC-9815157F2748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{681AC9DB-3364-4221-80AC-9815157F2748}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{926839FA-A642-4230-9FBD-967FCF851E05} = {F320501E-9822-4220-B833-04D1A94F7DCD}
 		{AB0AEB0F-7E33-4217-8F85-56E9D8B5C0FA} = {F320501E-9822-4220-B833-04D1A94F7DCD}
 		{9E3EAE04-68ED-4B10-A863-2BAC663365C9} = {98CEC5D1-6552-49D5-B75F-35214756A837}
+		{681AC9DB-3364-4221-80AC-9815157F2748} = {98CEC5D1-6552-49D5-B75F-35214756A837}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C18A3F3D-77D2-4C3B-86CB-576BC97ACD9B}
