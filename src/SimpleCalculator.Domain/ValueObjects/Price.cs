@@ -7,7 +7,7 @@ namespace SimpleCalculator.Domain.ValueObjects
 {
     public class Price : Money
     {
-        public Price(CurrencyIso currency, decimal amount) : base(currency, amount)
+        public Price(Currency currency, decimal amount) : base(currency, amount)
         {
             if (amount < 0)
                 throw new ArgumentException("A price cannot be negative.");

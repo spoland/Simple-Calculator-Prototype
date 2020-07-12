@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace SimpleCalculator.Domain.ValueObjects
 {
-    public class CurrencyIso : ValueObject
+    public class Currency : ValueObject
     {
-        public CurrencyIso(string value)
+        public Currency(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {

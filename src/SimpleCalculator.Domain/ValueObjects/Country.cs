@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace SimpleCalculator.Domain.ValueObjects
 {
-    public class CountryIso : ValueObject
+    public class Country : ValueObject
     {
-        public CountryIso(string value)
+        public Country(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -23,7 +23,5 @@ namespace SimpleCalculator.Domain.ValueObjects
         {
             yield return Value;
         }
-
-        private List<string> ValidCountryIsos() => new List<string> { "IE", "US", "GB", "CH" };
     }
 }

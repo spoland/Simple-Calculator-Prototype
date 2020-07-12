@@ -42,8 +42,8 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                countryIso: new CountryIso(request.CountryIso),
-                currencyIso: new CurrencyIso(request.CurrencyIso),
+                countryIso: new Country(request.CountryIso),
+                currencyIso: new Currency(request.CurrencyIso),
                 orderItems: orderItems);
 
             ForwardCalculateCommand.Execute(order, _options.Single(x => x.Id == request.CountryIso));
@@ -69,8 +69,8 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                countryIso: new CountryIso(request.CountryIso),
-                currencyIso: new CurrencyIso(request.CurrencyIso),
+                countryIso: new Country(request.CountryIso),
+                currencyIso: new Currency(request.CurrencyIso),
                 orderItems: orderItems
             );
 

@@ -11,7 +11,7 @@ namespace SimpleCalculator.Domain.Models
     {
         private readonly Price _totalOrderPrice;
 
-        public Order(CountryIso countryIso, CurrencyIso currencyIso, IEnumerable<OrderItem> orderItems)
+        public Order(Country countryIso, Currency currencyIso, IEnumerable<OrderItem> orderItems)
         {
             CountryIso = countryIso;
             CurrencyIso = currencyIso;
@@ -34,12 +34,12 @@ namespace SimpleCalculator.Domain.Models
         /// <summary>
         /// the delivery country ISO
         /// </summary>
-        public CountryIso CountryIso { get; }
+        public Country CountryIso { get; }
 
         /// <summary>
         /// The calculation currency ISO
         /// </summary>
-        public CurrencyIso CurrencyIso { get; }
+        public Currency CurrencyIso { get; }
 
         /// <summary>
         /// The order items collection

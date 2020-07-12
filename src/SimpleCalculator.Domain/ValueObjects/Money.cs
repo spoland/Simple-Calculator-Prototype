@@ -7,7 +7,7 @@ namespace SimpleCalculator.Domain.ValueObjects
 {
     public class Money : ValueObject, IComparable<Money>
     {
-        public Money(CurrencyIso currency, decimal amount)
+        public Money(Currency currency, decimal amount)
         {
             Currency = currency;
             Amount = amount;
@@ -20,7 +20,7 @@ namespace SimpleCalculator.Domain.ValueObjects
 
             try
             {
-                var currency = new CurrencyIso(value.Substring(0, 3));
+                var currency = new Currency(value.Substring(0, 3));
                 var amount = decimal.Parse(value.Substring(3));
 
                 Currency = currency;
@@ -32,7 +32,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             }
         }
 
-        public readonly CurrencyIso Currency;
+        public readonly Currency Currency;
 
         public decimal Amount { get; set; }
 
