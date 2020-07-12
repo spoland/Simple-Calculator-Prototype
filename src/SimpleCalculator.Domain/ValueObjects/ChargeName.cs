@@ -39,6 +39,7 @@ namespace SimpleCalculator.Domain.ValueObjects
         }
 
         public static implicit operator ChargeName(string value) => new ChargeName(value);
+        public static implicit operator string(ChargeName value) => value.Value;
 
         public override string ToString() => Value;
 

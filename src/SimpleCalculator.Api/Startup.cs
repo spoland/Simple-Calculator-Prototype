@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,7 @@ namespace SimpleCalculator.Api
         {
             services.AddOptions();
             services.AddControllers();
+            services.AddMediatR(typeof(Startup));
 
             // Read and register configurations
             services.Configure<List<CalculatorConfigurationOptions>>(_configuration.GetSection("CalculatorConfigurations"));

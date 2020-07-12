@@ -43,6 +43,8 @@ namespace SimpleCalculator.Domain.ValueObjects
 
             return new Price(minuend.Currency, minuend.Value - subtrahend.Value);
         }
+
+        public static implicit operator string(Price value) => value.ToString();
     }
 
     public static class PriceExtensions 

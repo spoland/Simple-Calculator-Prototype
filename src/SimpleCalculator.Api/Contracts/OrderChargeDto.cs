@@ -1,20 +1,15 @@
-﻿using SimpleCalculator.Domain.ValueObjects;
-
-namespace SimpleCalculator.Api.Contracts
+﻿namespace SimpleCalculator.Api.Contracts
 {
     public class OrderChargeDto
     {
-        public OrderChargeDto()
-        { }
-
-        public OrderChargeDto(OrderCharge charge)
+        public OrderChargeDto(string name, string amount)
         {
-            Name = charge.ChargeName.Value;
-            Amount = charge.ChargeAmount.ToString();
+            Name = name;
+            Amount = amount;
         }
 
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; }
 
-        public string Amount { get; set; } = string.Empty;
+        public string Amount { get; }
     }
 }
