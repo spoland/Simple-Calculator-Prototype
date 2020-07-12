@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Entities;
+﻿using SimpleCalculator.Domain.Constants;
+using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Options;
@@ -27,6 +28,12 @@ namespace SimpleCalculator.Api.Commands
 
             // Create a forward calculator for the selected range
             var calculator = ForwardCalculatorFactory.Create(range, calculatorConfiguration.Excess);
+
+            foreach (var item in order.OrderItems)
+            {
+                var inputPrice = item.GetCharge(ChargeNames.InputItem);
+                item.AddCharge(new OrderCharge(ChargeNames.Item, inputPrice.ChargeAmount, ChargeNames.Item));
+            };
 
             // Run calculator
             calculator?.Invoke(order);

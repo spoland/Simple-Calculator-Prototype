@@ -21,7 +21,6 @@ namespace SimpleCalculator.Domain.Models
             Quantity = quantity;
             VatRate = vatRate;
             DutyRate = dutyRate;
-            Price = inputPrice;
 
             _charges = new List<OrderCharge>();
             _reverseRates = new List<ReverseRate>();
@@ -48,11 +47,6 @@ namespace SimpleCalculator.Domain.Models
         /// The items Duty rate.
         /// </summary>
         public Rate DutyRate { get; }
-
-        /// <summary>
-        /// The item price.
-        /// </summary>
-        public Price Price { get; }
 
         /// <summary>
         /// The charges collection.
