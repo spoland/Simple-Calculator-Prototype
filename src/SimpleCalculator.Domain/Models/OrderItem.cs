@@ -55,15 +55,15 @@ namespace SimpleCalculator.Domain.Models
         public Price Price { get; }
 
         /// <summary>
+        /// The charges collection.
+        /// </summary>
+        public IEnumerable<OrderCharge> Charges => _charges;
+
+        /// <summary>
         /// A collection of reverse rates that have been calculated during a reverse calculation.
         /// Make readonly and add method for adding/removing.
         /// </summary>
         public IEnumerable<ReverseRate> ReverseRates => _reverseRates;
-
-        /// <summary>
-        /// The charges collection.
-        /// </summary>
-        public IEnumerable<OrderCharge> Charges => _charges;
 
         /// <summary>
         /// Get the requested order charge.
@@ -71,7 +71,7 @@ namespace SimpleCalculator.Domain.Models
         /// <param name="chargeName">The charge name being requested.</param>
         /// <param name="includeSubCharges">A <see cref="bool"/> value indicating whether all sub charges (e.g: VatOnDuty, VatOnFee) should be included when requesting a charge (e.g Vat)</param>
         /// <returns></returns>
-        public OrderCharge GetTotalCharge(ChargeName chargeName)
+        public OrderCharge GetCharge(ChargeName chargeName)
         {
             var chargeAmount = Charges
                 .Where(c => c.BaseChargeName == chargeName || c.BaseChargeName == ChargeName.Empty && c.ChargeName == chargeName)
@@ -84,11 +84,6 @@ namespace SimpleCalculator.Domain.Models
         public void AddCharge(OrderCharge charge)
         {
             _charges.Add(charge);
-        }
-
-        public OrderCharge GetCharge(ChargeName chargeName)
-        {
-            return Charges.Single(c => c.ChargeName == chargeName);
         }
 
         public OrderCharge GetTotalCalculatedCharge()

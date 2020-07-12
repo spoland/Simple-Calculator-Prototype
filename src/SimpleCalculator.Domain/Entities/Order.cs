@@ -72,7 +72,7 @@ namespace SimpleCalculator.Domain.Entities
         /// <returns></returns>
         public OrderCharge GetTotalCharge(ChargeName chargeName)
         {
-            var chargeAmount = OrderItems.Select(oi => oi.GetTotalCharge(chargeName).ChargeAmount).Sum();
+            var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
             return new OrderCharge(chargeName, chargeAmount, chargeName);
         }
 

@@ -29,7 +29,7 @@ namespace SimpleCalculator.Domain.Calculators
             {
                 foreach (var baseChargeName in _baseCharges)
                 {
-                    var baseChargeAmount = item.GetTotalCharge(baseChargeName);
+                    var baseChargeAmount = item.GetCharge(baseChargeName);
 
                     if (baseChargeAmount.ChargeAmount.Amount == 0)
                         continue;

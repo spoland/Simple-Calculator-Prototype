@@ -38,7 +38,6 @@ namespace SimpleCalculator.Api.Controllers
             
             orderItems.ForEach(oi =>
             {
-                oi.AddCharge(new OrderCharge(ChargeNames.InputItem, new Price(oi.Price.Currency, oi.Price.Amount), ChargeNames.InputItem));
                 oi.AddCharge(new OrderCharge(ChargeNames.Item, new Price(oi.Price.Currency, oi.Price.Amount), ChargeNames.Item));
             });
 
@@ -63,11 +62,6 @@ namespace SimpleCalculator.Api.Controllers
                         dutyRate: new Rate(oi.DutyRate),
                         inputPrice: new Price(oi.Price)))
                 .ToList();
-
-            orderItems.ForEach(oi =>
-            {
-                oi.AddCharge(new OrderCharge(ChargeNames.InputItem, oi.Price, ChargeNames.InputItem));
-            });
 
             var order = new Order(
                 country: new Country(request.CountryIso),
