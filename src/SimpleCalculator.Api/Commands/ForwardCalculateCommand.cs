@@ -20,7 +20,7 @@ namespace SimpleCalculator.Api.Commands
 
             // Determine deminimis base
             var deminimisBase = order.Charges.Where(chargeName => calculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
-                .Select(x => x.ChargeAmount.Amount).Sum();
+                .Select(x => x.ChargeAmount.Value).Sum();
 
             // Get the correct range for the base price
             var range = calculatorConfiguration.GetRangeForBasePrice(new Price(order.CurrencyIso, deminimisBase));

@@ -31,7 +31,7 @@ namespace SimpleCalculator.Domain.Calculators
                 {
                     var baseChargeAmount = item.GetCharge(baseChargeName);
 
-                    if (baseChargeAmount.ChargeAmount.Amount == 0)
+                    if (baseChargeAmount.ChargeAmount.Value == 0)
                         continue;
                                         
                     var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;

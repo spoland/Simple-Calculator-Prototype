@@ -42,7 +42,7 @@ namespace SimpleCalculator.Domain.Calculators
                     // Check to see if a charge has been calculated for this charge type.
                     // If so, do a forward calculation - the calculated charges can be removed from the 
                     // inclusive price before applying the reverse rate as they are known.
-                    if (baseChargeAmount.ChargeAmount.Amount != 0)
+                    if (baseChargeAmount.ChargeAmount.Value != 0)
                     {
                         var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;
 

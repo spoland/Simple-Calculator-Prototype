@@ -38,7 +38,7 @@ namespace SimpleCalculator.Api.Controllers
             
             orderItems.ForEach(oi =>
             {
-                oi.AddCharge(new OrderCharge(ChargeNames.Item, new Price(oi.Price.Currency, oi.Price.Amount), ChargeNames.Item));
+                oi.AddCharge(new OrderCharge(ChargeNames.Item, new Price(oi.Price.Currency, oi.Price.Value), ChargeNames.Item));
             });
 
             var order = new Order(

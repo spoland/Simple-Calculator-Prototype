@@ -110,7 +110,7 @@ namespace SimpleCalculator.Domain.Models
 
         public void SetCostRelativeToOrderTotal(Price totalOrderPrice)
         {
-            CostRelativeToOrderTotal = _charges.Single(x => x.ChargeName.Value == ChargeNames.InputItem).ChargeAmount.Amount / totalOrderPrice.Amount;
+            CostRelativeToOrderTotal = _charges.Single(x => x.ChargeName.Value == ChargeNames.InputItem).ChargeAmount.Value / totalOrderPrice.Value;
         }
 
         public void AddReverseRate(ReverseRate reverseRate) => _reverseRates.Add(reverseRate);

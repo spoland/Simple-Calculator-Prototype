@@ -25,7 +25,7 @@ namespace SimpleCalculator.Domain.ValueObjects
 
         public static Price operator *(Price price, decimal multiplier)
         {
-            return new Price(price.Currency, price.Amount * multiplier);
+            return new Price(price.Currency, price.Value * multiplier);
         }
 
         public static Price operator +(Price summand1, Price summand2)
@@ -33,7 +33,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (summand1.Currency != summand2.Currency)
                 throw new CurrencyMismatchException($"Unable to add {summand1} to {summand2} as they are of different currencies.");
 
-            return new Price(summand1.Currency, summand1.Amount + summand2.Amount);
+            return new Price(summand1.Currency, summand1.Value + summand2.Value);
         }
 
         public static Price operator -(Price minuend, Price subtrahend)
@@ -41,7 +41,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (minuend.Currency != subtrahend.Currency)
                 throw new CurrencyMismatchException($"Unable to subtract {subtrahend} from {minuend} as they are of different currencies.");
 
-            return new Price(minuend.Currency, minuend.Amount - subtrahend.Amount);
+            return new Price(minuend.Currency, minuend.Value - subtrahend.Value);
         }
     }
 

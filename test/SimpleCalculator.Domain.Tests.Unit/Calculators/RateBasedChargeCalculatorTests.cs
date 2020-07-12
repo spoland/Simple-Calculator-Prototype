@@ -49,9 +49,9 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
             // Assert
             orderItem.Charges.Should()
                 .HaveCount(7).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Amount == 10).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Amount == 1).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Amount == 0.5m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 10).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 1).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.5m);
         }
 
         [Fact]
@@ -90,14 +90,14 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
             // Assert
             orderItem1.Charges.Should()
                 .HaveCount(7).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Amount == 10).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Amount == 1).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Amount == 0.5m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 10).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 1).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.5m);
             orderItem2.Charges.Should()
                 .HaveCount(7).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Amount == 5).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Amount == 0.5m).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Amount == 0.25m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 5).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 0.5m).And
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.25m);
         }
     }
 }

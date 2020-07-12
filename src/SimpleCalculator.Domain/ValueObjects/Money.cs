@@ -10,7 +10,7 @@ namespace SimpleCalculator.Domain.ValueObjects
         public Money(Currency currency, decimal amount)
         {
             Currency = currency;
-            Amount = amount;
+            Value = amount;
         }
 
         public Money(string value)
@@ -24,7 +24,7 @@ namespace SimpleCalculator.Domain.ValueObjects
                 var amount = decimal.Parse(value.Substring(3));
 
                 Currency = currency;
-                Amount = amount;
+                Value = amount;
             }
             catch (Exception)
             {
@@ -34,14 +34,14 @@ namespace SimpleCalculator.Domain.ValueObjects
 
         public readonly Currency Currency;
 
-        public decimal Amount { get; set; }
+        public decimal Value { get; set; }
 
         public static bool operator <(Money money1, Money money2)
         {
             if (money1.Currency != money2.Currency)
                 throw new CurrencyMismatchException($"Unable to compare {money1} to {money2} as they are of different currencies.");
 
-            return money1.Amount < money2.Amount;
+            return money1.Value < money2.Value;
         }
 
         public static bool operator >(Money money1, Money money2)
@@ -49,7 +49,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (money1.Currency != money2.Currency)
                 throw new CurrencyMismatchException($"Unable to compare {money1} to {money2} as they are of different currencies.");
 
-            return money1.Amount > money2.Amount;
+            return money1.Value > money2.Value;
         }
 
         public static bool operator >=(Money money1, Money money2)
@@ -57,7 +57,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (money1.Currency != money2.Currency)
                 throw new CurrencyMismatchException($"Unable to compare {money1} to {money2} as they are of different currencies.");
 
-            return money1.Amount >= money2.Amount;
+            return money1.Value >= money2.Value;
         }
 
         public static bool operator <=(Money money1, Money money2)
@@ -65,7 +65,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (money1.Currency != money2.Currency)
                 throw new CurrencyMismatchException($"Unable to compare {money1} to {money2} as they are of different currencies.");
 
-            return money1.Amount <= money2.Amount;
+            return money1.Value <= money2.Value;
         }
 
         public static Money operator +(Money summand1, Money summand2)
@@ -73,7 +73,7 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (summand1.Currency != summand2.Currency)
                 throw new CurrencyMismatchException($"Unable to add {summand1} to {summand2} as they are of different currencies.");
 
-            return new Money(summand1.Currency, summand1.Amount + summand2.Amount);
+            return new Money(summand1.Currency, summand1.Value + summand2.Value);
         }
 
         public static Money operator -(Money minuend, Money subtrahend)
@@ -81,23 +81,23 @@ namespace SimpleCalculator.Domain.ValueObjects
             if (minuend.Currency != subtrahend.Currency)
                 throw new CurrencyMismatchException($"Unable to subtract {subtrahend} from {minuend} as they are of different currencies.");
 
-            return new Money(minuend.Currency, minuend.Amount - subtrahend.Amount);
+            return new Money(minuend.Currency, minuend.Value - subtrahend.Value);
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Currency;
-            yield return Amount;
+            yield return Value;
         }
 
-        public override string ToString() => $"{Currency.Value}{Amount}";
+        public override string ToString() => $"{Currency.Value}{Value}";
 
         public int CompareTo(Money other)
         {
-            if (Amount < other.Amount)
+            if (Value < other.Value)
                 return -1;
 
-            if (Amount > other.Amount)
+            if (Value > other.Value)
                 return 1;
 
             return 0;

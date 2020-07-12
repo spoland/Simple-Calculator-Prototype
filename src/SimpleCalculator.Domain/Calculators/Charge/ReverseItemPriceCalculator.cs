@@ -19,7 +19,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                 var partiallyReversedItemPrice = item.GetCharge(ChargeNames.InputItem).ChargeAmount - knownCharges;
 
                 // Reverse out the remaining charges using the calculated reverse rates
-                var itemPrice = partiallyReversedItemPrice.Amount / (1 + item.ReverseRates.Sum(x => x.Rate.AsDecimal));
+                var itemPrice = partiallyReversedItemPrice.Value / (1 + item.ReverseRates.Sum(x => x.Rate.AsDecimal));
 
                 // Add the item charge
                 item.AddCharge(new OrderCharge(ChargeNames.Item, new Price(partiallyReversedItemPrice.Currency, itemPrice), ChargeNames.Item));

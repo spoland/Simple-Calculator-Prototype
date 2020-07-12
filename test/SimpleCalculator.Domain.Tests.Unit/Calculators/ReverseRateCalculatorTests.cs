@@ -44,7 +44,7 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
 
             // Assert
             orderItem.ReverseRates.Should().BeEmpty();
-            orderItem.Charges.Should().ContainSingle(c => c.ChargeName.Value == "VatOnDuty" && c.ChargeAmount.Amount == 10);
+            orderItem.Charges.Should().ContainSingle(c => c.ChargeName.Value == "VatOnDuty" && c.ChargeAmount.Value == 10);
         }
 
         [Fact]
