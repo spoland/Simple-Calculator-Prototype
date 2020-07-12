@@ -5,12 +5,4 @@
     <nullable>enable</nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleCalculator.Core\SimpleCalculator.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-  </ItemGroup>
-
 </Project>

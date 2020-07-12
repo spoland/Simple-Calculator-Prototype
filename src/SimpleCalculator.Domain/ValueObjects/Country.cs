@@ -1,4 +1,4 @@
-﻿using SimpleCalculator.Core.Abstractions;
+﻿using SimpleCalculator.Domain.Abstractions;
 using System;
 using System.Collections.Generic;
 

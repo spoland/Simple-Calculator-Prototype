@@ -1,5 +1,4 @@
-﻿using SimpleCalculator.Core.Abstractions;
-using SimpleCalculator.Domain.Constants;
+﻿using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;

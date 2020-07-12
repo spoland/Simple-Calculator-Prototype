@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleCalculator.Core.Abstractions
+namespace SimpleCalculator.Domain.Abstractions
 {
     public abstract class ValueObject
     {
