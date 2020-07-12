@@ -1,6 +1,7 @@
 ﻿using SimpleCalculator.Core.Abstractions;
 using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,9 +11,8 @@ namespace SimpleCalculator.Domain.Models
     {
         private readonly Price _totalOrderPrice;
 
-        public Order(OrderId id, CountryIso countryIso, CurrencyIso currencyIso, IEnumerable<OrderItem> orderItems)
+        public Order(CountryIso countryIso, CurrencyIso currencyIso, IEnumerable<OrderItem> orderItems)
         {
-            Id = id;
             CountryIso = countryIso;
             CurrencyIso = currencyIso;
             OrderItems = orderItems;
@@ -22,6 +22,8 @@ namespace SimpleCalculator.Domain.Models
                 .Where(x => x.Name.Value == ChargeNames.InputItem)
                 .Select(c => c.Charge)
                 .Sum();
+
+            Id = new OrderId(Guid.NewGuid().ToString());
         }
 
         /// <summary>

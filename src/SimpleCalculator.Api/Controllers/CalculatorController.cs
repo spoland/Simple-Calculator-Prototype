@@ -42,7 +42,6 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                id: new OrderId(request.Id),
                 countryIso: new CountryIso(request.CountryIso),
                 currencyIso: new CurrencyIso(request.CurrencyIso),
                 orderItems: orderItems);
@@ -70,7 +69,6 @@ namespace SimpleCalculator.Api.Controllers
             });
 
             var order = new Order(
-                id: new OrderId(request.Id),
                 countryIso: new CountryIso(request.CountryIso),
                 currencyIso: new CurrencyIso(request.CurrencyIso),
                 orderItems: orderItems
