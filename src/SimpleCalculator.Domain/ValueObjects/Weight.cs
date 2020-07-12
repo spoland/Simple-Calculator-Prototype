@@ -4,12 +4,17 @@ namespace SimpleCalculator.Domain.ValueObjects
 {
     public class Weight
     {
-        public Weight(decimal valueInKilograms)
+        public static Weight InKilogrames(decimal value)
         {
-            if (valueInKilograms <= 0)
+            return new Weight(value);
+        }
+
+        private Weight(decimal value)
+        {
+            if (value <= 0)
                 throw new ArgumentException("Weight value cannot be 0.");
 
-            Value = valueInKilograms;
+            Value = value;
         }
 
         /// <summary>

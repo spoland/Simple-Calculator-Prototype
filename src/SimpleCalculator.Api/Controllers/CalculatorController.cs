@@ -29,7 +29,7 @@ namespace SimpleCalculator.Api.Controllers
             var orderItems = request.OrderItems.Select(oi =>
                 new OrderItem(
                     quantity: new Quantity(oi.Quantity),
-                    weight: new Weight(oi.Weight),
+                    weight: Weight.InKilogrames(oi.Weight),
                     vatRate: new Rate(oi.VatRate),
                     dutyRate: new Rate(oi.DutyRate),
                     price: new Price(oi.Price)))
@@ -57,7 +57,7 @@ namespace SimpleCalculator.Api.Controllers
             var orderItems = request.OrderItems.Select(oi =>
                     new OrderItem(
                         quantity: new Quantity(oi.Quantity),
-                        weight: new Weight(oi.Weight),
+                        weight: Weight.InKilogrames(oi.Weight),
                         vatRate: new Rate(oi.VatRate),
                         dutyRate: new Rate(oi.DutyRate),
                         price: new Price(oi.Price)))

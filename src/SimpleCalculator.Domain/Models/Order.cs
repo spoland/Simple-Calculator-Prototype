@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SimpleCalculator.Domain.Models
 {
-    public class Order : Entity
+    public class Order
     {
         private readonly Price _totalOrderPrice;
 
