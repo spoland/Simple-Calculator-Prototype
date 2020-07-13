@@ -28,13 +28,12 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
 
             if (appliedCharge.ChargeAmount < _minimumPayable)
             {
+                order.RemoveCharge(_chargeName);
+
                 foreach(var item in order.OrderItems)
                 {
-                    item.RemoveCharge(_chargeName);
-
                     var minimumItemCharge = _minimumPayable * order.RelativeOrderItemValue(item);
-
-                    item.AddCharge(new OrderCharge(_chargeName, minimumItemCharge, _chargeName));
+                    item.AddCharge(new OrderCharge(appliedCharge.ChargeName, minimumItemCharge, appliedCharge.BaseChargeName));
                 }
             }
         }

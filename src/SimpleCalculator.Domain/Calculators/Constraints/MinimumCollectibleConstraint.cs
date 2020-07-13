@@ -1,7 +1,6 @@
 ﻿using SimpleCalculator.Domain.Abstractions;
 using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.ValueObjects;
-using System.Linq;
 
 namespace SimpleCalculator.Domain.Calculators.Constraints
 {
@@ -26,11 +25,9 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
             _chargeCalculator.Calculate(order);
 
             var appliedCharge = order.GetCharge(_chargeName);
-                            
+
             if (appliedCharge.ChargeAmount < _minimumCollectible)
-            {
-                order.OrderItems.ToList().ForEach(oi => oi.RemoveCharge(_chargeName));
-            }
+                order.RemoveCharge(_chargeName);
         }
     }
 }

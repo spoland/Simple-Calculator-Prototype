@@ -10,11 +10,13 @@ namespace SimpleCalculator.Domain.Entities
 {
     public class Order : IChargeable
     {
+        private readonly List<OrderItem> _orderItems;
+
         public Order(Country country, Currency currency, List<OrderItem> orderItems)
         {
             CountryIso = country;
             CurrencyIso = currency;
-            OrderItems = orderItems;
+            _orderItems = orderItems;
 
             TotalOrderPrice = orderItems.Select(oi => oi.GetCharge(ChargeNames.InputItem).ChargeAmount).Sum();
 
@@ -39,12 +41,12 @@ namespace SimpleCalculator.Domain.Entities
         /// <summary>
         /// The order items collection
         /// </summary>
-        public IEnumerable<OrderItem> OrderItems { get; }
+        public IEnumerable<OrderItem> OrderItems => _orderItems;
 
         /// <summary>
         /// The charges collection
         /// </summary>
-        public IEnumerable<OrderCharge> Charges => OrderItems.SelectMany(oi => oi.Charges);
+        public IEnumerable<OrderCharge> Charges => _orderItems.SelectMany(oi => oi.Charges);
 
         /// <summary>
         /// Get the requested order charge, if the charge name is a base charge it will return the total 
@@ -52,8 +54,17 @@ namespace SimpleCalculator.Domain.Entities
         /// </summary>
         public OrderCharge GetCharge(ChargeName chargeName)
         {
-            var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
+            var chargeAmount = _orderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
             return new OrderCharge(chargeName, chargeAmount, chargeName);
+        }
+
+        /// <summary>
+        /// Removes the charge from all order items on the order.
+        /// </summary>
+        /// <param name="chargeName">Name of the charge.</param>
+        public void RemoveCharge(ChargeName chargeName)
+        {
+            _orderItems.ForEach(oi => oi.RemoveCharge(chargeName));
         }
 
         public OrderCharge GetTotalCalculatedCharge()
