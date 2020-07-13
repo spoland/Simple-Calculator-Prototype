@@ -7,6 +7,8 @@ namespace SimpleCalculator.Domain.Abstractions
     {
         public OrderCharge GetCharge(ChargeName chargeName, Currency currency);
 
+        public void RemoveCharge(ChargeName chargeName);
+
         public IEnumerable<OrderCharge> Charges { get; }
     }
 }
