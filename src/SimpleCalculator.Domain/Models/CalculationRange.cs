@@ -30,7 +30,7 @@ namespace SimpleCalculator.Domain.Models
         /// </summary>
         public void Sort()
         {
-            ChargeConfigurations = TopologicalSort(ChargeConfigurations.OrderByDescending(x => x.KnownCharge).ThenBy(x => x.Name.Value), GetDependencies);
+            ChargeConfigurations = TopologicalSort(ChargeConfigurations.OrderByDescending(x => x.KnownCharge).ThenBy(x => x.ChargeName.Value), GetDependencies);
         }
 
         /// <summary>

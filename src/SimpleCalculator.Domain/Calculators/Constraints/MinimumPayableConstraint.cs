@@ -24,7 +24,7 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
         {
             _chargeCalculator.Calculate(order);
 
-            var appliedCharge = order.GetTotalCharge(_chargeName);
+            var appliedCharge = order.GetCharge(_chargeName);
 
             if (appliedCharge.ChargeAmount < _minimumPayable)
             {
@@ -32,7 +32,7 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
                 {
                     item.RemoveCharge(_chargeName);
 
-                    var minimumItemCharge = _minimumPayable * item.CostRelativeToOrderTotal;
+                    var minimumItemCharge = _minimumPayable * order.RelativeOrderItemValue(item);
 
                     item.AddCharge(new OrderCharge(_chargeName, minimumItemCharge, _chargeName));
                 }

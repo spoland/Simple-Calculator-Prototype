@@ -1,11 +1,12 @@
-﻿using SimpleCalculator.Domain.Constants;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SimpleCalculator.Domain.Models
 {
-    public class OrderItem
+    public class OrderItem : IChargeable
     {
         private readonly List<OrderCharge> _charges;
         private readonly List<ReverseRate> _reverseRates;
@@ -102,16 +103,6 @@ namespace SimpleCalculator.Domain.Models
             _charges.RemoveAll(x => x.ChargeName.Value != ChargeNames.InputItem && x.ChargeName.Value != ChargeNames.Item);
         }
 
-        public void SetCostRelativeToOrderTotal(Price totalOrderPrice)
-        {
-            CostRelativeToOrderTotal = _charges.Single(x => x.ChargeName.Value == ChargeNames.InputItem).ChargeAmount.Value / totalOrderPrice.Value;
-        }
-
         public void AddReverseRate(ReverseRate reverseRate) => _reverseRates.Add(reverseRate);
-
-        /// <summary>
-        /// Gets the cost of this item relative to the total of all of the order item prices in the order.
-        /// </summary>
-        internal decimal CostRelativeToOrderTotal { get; set; }
     }
 }

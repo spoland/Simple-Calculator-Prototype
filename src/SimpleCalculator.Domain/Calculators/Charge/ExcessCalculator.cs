@@ -35,7 +35,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                 {
                     foreach(var item in order.OrderItems)
                     {
-                        var itemExcessAmount = _excessAmount * item.CostRelativeToOrderTotal;
+                        var itemExcessAmount = _excessAmount * order.RelativeOrderItemValue(item);
                         var itemExcessCharge = new OrderCharge(itemExcessChargeName, itemExcessAmount, new ChargeName("excess"));
 
                         var itemCharge = item.GetCharge(_excessChargeName);

@@ -1,15 +1,9 @@
-﻿using SimpleCalculator.Domain.Options;
-using SimpleCalculator.Domain.ValueObjects;
+﻿using SimpleCalculator.Domain.ValueObjects;
 
 namespace SimpleCalculator.Domain.Models
 {
     public class ExcessConfiguration
     {
-        public static ExcessConfiguration FromOptions(ExcessConfigurationOptions options)
-        {
-            return new ExcessConfiguration(options.BaseCharge, options.Amount, options.InputCharge ?? null as ChargeName);
-        }
-
         /// <summary>
         /// Creates a new <see cref="ExcessConfiguration"/>.
         /// </summary>

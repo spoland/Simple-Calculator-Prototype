@@ -1,25 +1,21 @@
-﻿using SimpleCalculator.Domain.Exceptions;
-using SimpleCalculator.Domain.Options;
+﻿using SimpleCalculator.Domain.Enums;
 using SimpleCalculator.Domain.ValueObjects;
-using System.Linq;
 
 namespace SimpleCalculator.Domain.Models.ChargeConfigurations
 {
     public class FixedRateChargeConfiguration : ChargeConfiguration
     {
-        public FixedRateChargeConfiguration(ChargeConfigurationOptions options) : base(options)
+        public FixedRateChargeConfiguration(
+            ChargeName chargeName,
+            Price deminimisThreshold,
+            Price fixedChargeAmount) : base(chargeName, CalculationType.Fixed, deminimisThreshold, true, null, null)
         {
-            if (options.BaseCharges.Any())
-                throw new InvalidChargeConfigurationException("Fixed charges should not have any dependencies.");
-
-            FixedChargeAmount = options.FixedChargeAmount ?? throw new InvalidChargeConfigurationException("Fixed charges require a fixed charge amount to be specified.");
+            FixedChargeAmount = fixedChargeAmount;
         }
 
         /// <summary>
         /// The fixed charge amount to be paid.
         /// </summary>
         public Price FixedChargeAmount { get; }
-
-        public override bool KnownCharge => true;
     }
 }

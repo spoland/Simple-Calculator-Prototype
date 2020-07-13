@@ -198,13 +198,13 @@ namespace SimpleCalculator.Domain.Tests.Unit
             var calculationRange = configuration.CalculationRanges.Single().ChargeConfigurations.ToList();
 
             // Assert
-            calculationRange[0].Name.Value.Should().Be("FixedDuty");
-            calculationRange[1].Name.Value.Should().Be("FixedInterest");
-            calculationRange[2].Name.Value.Should().Be("Duty");
-            calculationRange[3].Name.Value.Should().Be("Vat");
-            calculationRange[4].Name.Value.Should().Be("Fee");
-            calculationRange[5].Name.Value.Should().Be("AnotherInterest");
-            calculationRange[6].Name.Value.Should().Be("FinalInterest");
+            calculationRange[0].ChargeName.Value.Should().Be("FixedDuty");
+            calculationRange[1].ChargeName.Value.Should().Be("FixedInterest");
+            calculationRange[2].ChargeName.Value.Should().Be("Duty");
+            calculationRange[3].ChargeName.Value.Should().Be("Vat");
+            calculationRange[4].ChargeName.Value.Should().Be("Fee");
+            calculationRange[5].ChargeName.Value.Should().Be("AnotherInterest");
+            calculationRange[6].ChargeName.Value.Should().Be("FinalInterest");
         }
 
         [Fact]
@@ -328,15 +328,15 @@ namespace SimpleCalculator.Domain.Tests.Unit
                 .ChargeConfigurations;
 
             // Assert
-            configurations.Single(x => x.Name.Value == "Duty")
+            configurations.Single(x => x.ChargeName.Value == "Duty")
                 .As<RateBasedChargeConfiguration>().BaseCharges.Should().BeEmpty();
 
-            configurations.Single(x => x.Name.Value == "Vat")
-                .As<RateBasedChargeConfiguration>().BaseCharges.Should().OnlyContain(x => x.Name.Value == "Duty");
+            configurations.Single(x => x.ChargeName.Value == "Vat")
+                .As<RateBasedChargeConfiguration>().BaseCharges.Should().OnlyContain(x => x.ChargeName.Value == "Duty");
 
-            configurations.Single(x => x.Name.Value == "Fee")
-                .As<RateBasedChargeConfiguration>().BaseCharges.Should().ContainSingle(x => x.Name.Value == "Duty").And
-                .ContainSingle(x => x.Name.Value == "Vat");
+            configurations.Single(x => x.ChargeName.Value == "Fee")
+                .As<RateBasedChargeConfiguration>().BaseCharges.Should().ContainSingle(x => x.ChargeName.Value == "Duty").And
+                .ContainSingle(x => x.ChargeName.Value == "Vat");
         }
 
         [Theory]

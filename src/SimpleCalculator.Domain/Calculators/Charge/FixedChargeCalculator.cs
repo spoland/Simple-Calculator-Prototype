@@ -19,7 +19,7 @@ namespace SimpleCalculator.Domain.Calculators
         {
             foreach (var item in order.OrderItems)
             {
-                var chargeAmount = _amount * item.CostRelativeToOrderTotal;
+                var chargeAmount = _amount * order.RelativeOrderItemValue(item);
                 item.AddCharge(new OrderCharge(_chargeName, chargeAmount, _chargeName));
             }
         }

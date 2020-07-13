@@ -1,29 +1,30 @@
 ﻿using SimpleCalculator.Domain.Enums;
-using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
-using System;
 
 namespace SimpleCalculator.Domain.Models.ChargeConfigurations
 {
     public abstract class ChargeConfiguration
     {
-        public ChargeConfiguration(ChargeConfigurationOptions options)
+        protected ChargeConfiguration(
+            ChargeName chargeName,
+            CalculationType calculationType,
+            Price deminimisThreshold,
+            bool knownCharge,
+            Price? minimumPayable,
+            Price? minimumCollectible)
         {
-            Name = options.Name;
-            CalculationType = options.CalculationType ?? throw new ArgumentException("Base charge type must be specified", nameof(options.CalculationType));
-            DeminimisThreshold = options.DeminimisThreshold;
-
-            if (!string.IsNullOrWhiteSpace(options.MinimumPayable))
-                MinimumPayable = options.MinimumPayable;
-
-            if (!string.IsNullOrWhiteSpace(options.MinimumCollectible))
-                MinimumCollectible = options.MinimumCollectible;
+            ChargeName = chargeName;
+            CalculationType = calculationType;
+            DeminimisThreshold = deminimisThreshold;
+            MinimumPayable = minimumPayable;
+            MinimumCollectible = minimumCollectible;
+            KnownCharge = knownCharge;
         }
 
         /// <summary>
         /// The charge name being configured.
         /// </summary>
-        public ChargeName Name { get; }
+        public ChargeName ChargeName { get; }
 
         /// <summary>
         /// The required calculation type - this determines what kind of calculation
@@ -49,6 +50,6 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
         /// <summary>
         /// Determines if the charge value can be easily resolved.
         /// </summary>
-        public abstract bool KnownCharge { get; }
+        public bool KnownCharge { get; }
     }
 }

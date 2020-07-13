@@ -1,7 +1,5 @@
 ﻿using SimpleCalculator.Domain.Exceptions;
-using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;
-using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -18,15 +16,13 @@ namespace SimpleCalculator.Domain.Models
         /// Creates a new <see cref="CalculatorConfiguration"/> based on a <see cref="CalculatorConfigurationOptions"/> object.
         /// </summary>
         /// <param name="calculatorConfigurationOptions">The calculator configuration options.</param>
-        public CalculatorConfiguration(CalculatorConfigurationOptions calculatorConfigurationOptions)
+        public CalculatorConfiguration(
+            IEnumerable<ChargeConfiguration> chargeConfigurations,
+            ExcessConfiguration? excessConfiguration,
+            IEnumerable<ChargeName> deminimisBaseCharges)
         {
-            if (!calculatorConfigurationOptions.ChargeConfigurations.Any())
+            if (!chargeConfigurations.Any())
                 throw new ArgumentException("At least one configuration must exist in order to perform a calculation.");
-
-            // Create all configuration objects
-            var chargeConfigurations = calculatorConfigurationOptions
-                .ChargeConfigurations
-                .Select(options => ChargeConfigurationFactory.CreateFromOptions(options));
 
             // Group configurations by deminimis threshold
             var configurationGroups = chargeConfigurations
@@ -34,20 +30,17 @@ namespace SimpleCalculator.Domain.Models
                 .OrderBy(x => x.Key)
                 .ToList();
 
-            // Check for duplicate charge configurations - should be improved.
-            if (configurationGroups.Any(x => x.ToList().Select(x => x.Name).Distinct().Count() != x.ToList().Select(x => x.Name).Count()))
-                throw new InvalidChargeConfigurationException("Duplicate charge configurations have been specified in the same range.");
-
-            ExcessConfiguration? excessConfiguration = null;
-
-            if (calculatorConfigurationOptions.Excess != null)
+            // Check for duplicate charge configurations
+            configurationGroups.ForEach(group =>
             {
-                excessConfiguration = ExcessConfiguration.FromOptions(calculatorConfigurationOptions.Excess);
-            }
+                var groupList = group.Select(x => x.ChargeName).ToList();
+                if (groupList.Count != groupList.Distinct().Count())
+                    throw new InvalidChargeConfigurationException("Duplicate charge configurations have been specified in the same range.");
+            });
 
             Excess = excessConfiguration;
             CalculationRanges = CreateRanges(configurationGroups);
-            DeminimisBaseCharges = calculatorConfigurationOptions.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
+            DeminimisBaseCharges = deminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
         }
 
         /// <summary>
@@ -91,7 +84,7 @@ namespace SimpleCalculator.Domain.Models
                 var newConfigs = configurationGroups[i].ToList();
 
                 // Replace charges from last range that exist in this range
-                configs.RemoveAll(config => newConfigs.Select(c => c.Name).Contains(config.Name));
+                configs.RemoveAll(config => newConfigs.Select(c => c.ChargeName).Contains(config.ChargeName));
                 configs.AddRange(newConfigs);
 
                 deminimisRanges.Add(new CalculationRange(threshold, configs));

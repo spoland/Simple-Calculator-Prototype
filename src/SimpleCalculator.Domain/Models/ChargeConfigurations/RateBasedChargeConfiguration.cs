@@ -1,8 +1,7 @@
-﻿using SimpleCalculator.Domain.Exceptions;
-using SimpleCalculator.Domain.Options;
-using SimpleCalculator.Domain.ValueObjects;
+﻿using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
+using SimpleCalculator.Domain.Enums;
 
 namespace SimpleCalculator.Domain.Models.ChargeConfigurations
 {
@@ -10,13 +9,16 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
     {
         private readonly List<ChargeName> _baseChargeNames;
 
-        public RateBasedChargeConfiguration(ChargeConfigurationOptions options) : base(options)
+        public RateBasedChargeConfiguration(
+            ChargeName chargeName,
+            Price deminimisThreshold,
+            Rate rate,
+            IEnumerable<ChargeName> baseChargeNames,
+            Price? minimumPayable,
+            Price? minimumCollectible) : base(chargeName, CalculationType.RateBased, deminimisThreshold, false, minimumPayable, minimumCollectible)
         {
-            if (!options.BaseCharges.Any())
-                throw new InvalidChargeConfigurationException("Rate based charges require at least one dependency to be specified.");
-
-            _baseChargeNames = options.BaseCharges.Select(bc => new ChargeName(bc)).ToList();
-            if (options.Rate.HasValue) Rate = new Rate(options.Rate.GetValueOrDefault());
+            Rate = rate;
+            _baseChargeNames = baseChargeNames.ToList();
         }
 
         /// <summary>
@@ -26,24 +28,17 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
         public IEnumerable<ChargeConfiguration> BaseCharges { get; private set; } = Enumerable.Empty<ChargeConfiguration>();
 
         /// <summary>
-        /// Exposes a list of charge names.
-        /// </summary>
-        public IEnumerable<ChargeName> BaseChargeNames => _baseChargeNames;
-
-        /// <summary>
         /// Set the charge configurations that this charge depends on
         /// </summary>
         /// <param name="configurations">A list of all configurations that are found in the same deminimis region.</param>
         public void SetDependencies(IEnumerable<ChargeConfiguration> configurations)
         {
-            BaseCharges = configurations.Where(c => _baseChargeNames.Contains(c.Name.Value));
+            BaseCharges = configurations.Where(c => _baseChargeNames.Contains(c.ChargeName.Value));
         }
 
         /// <summary>
         /// The rate that should be applied - can be null as the rate may be provided on the item.
         /// </summary>
         public Rate? Rate { get; }
-
-        public override bool KnownCharge => false;
     }
 }

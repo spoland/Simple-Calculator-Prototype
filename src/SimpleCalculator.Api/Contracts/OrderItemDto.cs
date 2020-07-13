@@ -1,6 +1,4 @@
-﻿using SimpleCalculator.Domain.Models;
-
-namespace SimpleCalculator.Api.Contracts
+﻿namespace SimpleCalculator.Api.Contracts
 {
     public class OrderItemDto
     {
@@ -12,6 +10,6 @@ namespace SimpleCalculator.Api.Contracts
 
         public decimal DutyRate { get; set; } = 0;
 
-        public string Price { get; set; } = string.Empty;
+        public decimal Price { get; set; }
     }
 }

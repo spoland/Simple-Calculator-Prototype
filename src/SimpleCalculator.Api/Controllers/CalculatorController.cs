@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SimpleCalculator.Api.Contracts;
+using SimpleCalculator.Api.Options;
 using SimpleCalculator.Api.RequestHandlers;
 using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Models;
-using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +31,16 @@ namespace SimpleCalculator.Api.Controllers
         [HttpPost("forward")]
         public async Task<ActionResult<IEnumerable<OrderChargeDto>>> ForwardCalculate(OrderDto requestDto)
         {
+            var currency = new Currency(requestDto.CurrencyIso);
+            var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);
+
             var orderItems = requestDto.OrderItems.Select(oi =>
                 new OrderItem(
                     quantity: new Quantity(oi.Quantity),
                     weight: Weight.InKilograms(oi.Weight),
                     vatRate: new Rate(oi.VatRate),
                     dutyRate: new Rate(oi.DutyRate),
-                    inputPrice: new Price(oi.Price)))
+                    inputPrice: new Price(currency, oi.Price)))
                 .ToList();
 
             var order = new Order(
@@ -56,13 +59,16 @@ namespace SimpleCalculator.Api.Controllers
         [HttpPost("reverse")]
         public async Task<ActionResult<IEnumerable<OrderChargeDto>>> ReverseCalculate(OrderDto requestDto)
         {
+            var currency = new Currency(requestDto.CurrencyIso);
+            var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);
+
             var orderItems = requestDto.OrderItems.Select(oi =>
                     new OrderItem(
                         quantity: new Quantity(oi.Quantity),
                         weight: Weight.InKilograms(oi.Weight),
                         vatRate: new Rate(oi.VatRate),
                         dutyRate: new Rate(oi.DutyRate),
-                        inputPrice: new Price(oi.Price)))
+                        inputPrice: new Price(currency, oi.Price)))
                 .ToList();
 
             var order = new Order(

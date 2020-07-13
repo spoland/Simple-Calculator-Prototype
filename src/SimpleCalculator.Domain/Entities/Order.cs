@@ -1,4 +1,5 @@
-﻿using SimpleCalculator.Domain.Constants;
+﻿using SimpleCalculator.Domain.Abstractions;
+using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
@@ -7,22 +8,15 @@ using System.Linq;
 
 namespace SimpleCalculator.Domain.Entities
 {
-    public class Order
+    public class Order : IChargeable
     {
         public Order(Country country, Currency currency, List<OrderItem> orderItems)
         {
             CountryIso = country;
             CurrencyIso = currency;
-
-            var totalOrderPrice = orderItems
-                .SelectMany(x => x.Charges)
-                .Where(x => x.ChargeName.Value == ChargeNames.InputItem)
-                .Select(c => c.ChargeAmount)
-                .Sum();
-
-            foreach (var item in orderItems) item.SetCostRelativeToOrderTotal(totalOrderPrice);
-
             OrderItems = orderItems;
+
+            TotalOrderPrice = orderItems.Select(oi => oi.GetCharge(ChargeNames.InputItem).ChargeAmount).Sum();
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -53,24 +47,10 @@ namespace SimpleCalculator.Domain.Entities
         public IEnumerable<OrderCharge> Charges => OrderItems.SelectMany(oi => oi.Charges);
 
         /// <summary>
-        /// Get the requested order charge - does not include subcharges (e.g VatOnDuty)
+        /// Get the requested order charge, if the charge name is a base charge it will return the total 
+        /// charge amount including sub charges (Vat, Vat On Duty etc.)
         /// </summary>
-        /// <param name="chargeName">The charge name being requested.</param>
-        /// <param name="includeSubCharges">A <see cref="bool"/> value indicating whether all sub charges (e.g: VatOnDuty, VatOnFee) should be included when requesting a charge (e.g Vat)</param>
-        /// <returns></returns>
         public OrderCharge GetCharge(ChargeName chargeName)
-        {
-            var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
-            return new OrderCharge(chargeName, chargeAmount, chargeName);
-        }
-
-        /// <summary>
-        /// Get the requested order charge, including sub charges.
-        /// </summary>
-        /// <param name="chargeName">The charge name being requested.</param>
-        /// <param name="includeSubCharges">A <see cref="bool"/> value indicating whether all sub charges (e.g: VatOnDuty, VatOnFee) should be included when requesting a charge (e.g Vat)</param>
-        /// <returns></returns>
-        public OrderCharge GetTotalCharge(ChargeName chargeName)
         {
             var chargeAmount = OrderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
             return new OrderCharge(chargeName, chargeAmount, chargeName);
@@ -86,5 +66,10 @@ namespace SimpleCalculator.Domain.Entities
         {
             foreach (var item in OrderItems) item.ResetCalculationProperties();
         }
+
+        public decimal RelativeOrderItemValue(OrderItem orderItem) 
+            => orderItem.GetCharge(ChargeNames.InputItem).ChargeAmount.Value / TotalOrderPrice.Value;
+
+        private Price TotalOrderPrice;
     }
 }

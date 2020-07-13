@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimpleCalculator.Domain.Options
+namespace SimpleCalculator.Api.Options
 {
     public class CalculatorConfigurationOptions
     {

@@ -1,11 +1,11 @@
 ﻿using SimpleCalculator.Domain.Enums;
 using System.Collections.Generic;
 
-namespace SimpleCalculator.Domain.Options
+namespace SimpleCalculator.Api.Options
 {
     public class ChargeConfigurationOptions
     {
-        public string Name { get; set; } = string.Empty;
+        public string ChargeName { get; set; } = string.Empty;
 
         public CalculationType? CalculationType { get; set; }
 
