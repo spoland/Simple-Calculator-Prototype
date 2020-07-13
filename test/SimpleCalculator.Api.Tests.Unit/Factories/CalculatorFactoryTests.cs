@@ -1,16 +1,18 @@
 ﻿using FluentAssertions;
+using SimpleCalculator.Api.Factories;
+using SimpleCalculator.Api.Options;
 using SimpleCalculator.Domain.Calculators;
 using SimpleCalculator.Domain.Calculators.Charge;
 using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;
-using SimpleCalculator.Domain.Options;
 using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
+using SimpleCalculator.Domain.Enums;
 using Xunit;
 
-namespace SimpleCalculator.Domain.Tests.Unit
+namespace SimpleCalculator.Api.Tests.Unit.Factories
 {
     public class CalculatorFactoryTests
     {
@@ -20,25 +22,25 @@ namespace SimpleCalculator.Domain.Tests.Unit
             // Arrange
             var chargeConfiguration1 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.Fixed,
+                CalculationType = CalculationType.Fixed,
                 DeminimisThreshold = "EUR0",
                 FixedChargeAmount = "EUR10",
-                Name = ChargeNames.Duty,
+                ChargeName = ChargeNames.Duty,
                 Rate = 5
             });
             var chargeConfiguration2 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.RateBased,
+                CalculationType = CalculationType.RateBased,
                 DeminimisThreshold = "EUR0",
                 BaseCharges = { "Item", ChargeNames.Duty },
-                Name = ChargeNames.Vat,
+                ChargeName = ChargeNames.Vat,
                 Rate = 5
             });
             var chargeConfiguration3 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.WeightBased,
+                CalculationType = CalculationType.WeightBased,
                 DeminimisThreshold = "EUR0",
-                Name = "Fee",
+                ChargeName = "Fee",
                 Rate = 5
             });
 
@@ -60,25 +62,25 @@ namespace SimpleCalculator.Domain.Tests.Unit
             // Arrange
             var chargeConfiguration1 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.Fixed,
+                CalculationType = CalculationType.Fixed,
                 DeminimisThreshold = "EUR0",
                 FixedChargeAmount = "EUR10",
-                Name = ChargeNames.Duty,
+                ChargeName = ChargeNames.Duty,
                 Rate = 5
             });
             var chargeConfiguration2 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.RateBased,
+                CalculationType = CalculationType.RateBased,
                 DeminimisThreshold = "EUR0",
                 BaseCharges = { "Item", ChargeNames.Duty },
-                Name = ChargeNames.Vat,
+                ChargeName = ChargeNames.Vat,
                 Rate = 5
             });
             var chargeConfiguration3 = ChargeConfigurationFactory.CreateFromOptions(new ChargeConfigurationOptions
             {
-                CalculationType = Enums.CalculationType.WeightBased,
+                CalculationType = CalculationType.WeightBased,
                 DeminimisThreshold = "EUR0",
-                Name = "Fee",
+                ChargeName = "Fee",
                 Rate = 5
             });
 

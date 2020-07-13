@@ -18,8 +18,8 @@ namespace SimpleCalculator.Domain.Models
         /// <param name="calculatorConfigurationOptions">The calculator configuration options.</param>
         public CalculatorConfiguration(
             IEnumerable<ChargeConfiguration> chargeConfigurations,
-            ExcessConfiguration? excessConfiguration,
-            IEnumerable<ChargeName> deminimisBaseCharges)
+            IEnumerable<ChargeName> deminimisBaseCharges,
+            ExcessConfiguration? excessConfiguration = null)
         {
             if (!chargeConfigurations.Any())
                 throw new ArgumentException("At least one configuration must exist in order to perform a calculation.");

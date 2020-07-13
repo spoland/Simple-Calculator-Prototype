@@ -11,11 +11,11 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
 
         public RateBasedChargeConfiguration(
             ChargeName chargeName,
-            Price deminimisThreshold,
-            Rate rate,
+            Price deminimisThreshold,            
             IEnumerable<ChargeName> baseChargeNames,
-            Price? minimumPayable,
-            Price? minimumCollectible) : base(chargeName, CalculationType.RateBased, deminimisThreshold, false, minimumPayable, minimumCollectible)
+            Rate? rate = default,
+            Price? minimumPayable = default,
+            Price? minimumCollectible = default) : base(chargeName, CalculationType.RateBased, deminimisThreshold, false, minimumPayable, minimumCollectible)
         {
             Rate = rate;
             _baseChargeNames = baseChargeNames.ToList();

@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Options\" />
+    <Compile Remove="Options\**" />
+    <EmbeddedResource Remove="Options\**" />
+    <None Remove="Options\**" />
   </ItemGroup>
 
 </Project>

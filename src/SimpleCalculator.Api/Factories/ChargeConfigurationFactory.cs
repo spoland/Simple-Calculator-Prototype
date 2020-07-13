@@ -17,7 +17,7 @@ namespace SimpleCalculator.Api.Factories
                 if (options.BaseCharges.Any())
                     throw new InvalidChargeConfigurationException("Fixed charges should not have any dependencies.");
 
-                if (options.FixedChargeAmount == null)
+                if (options.FixedChargeAmount == default)
                     throw new InvalidChargeConfigurationException("Fixed charge amount must be provided for fixed charge types.");
 
                 return new FixedRateChargeConfiguration(
@@ -28,20 +28,30 @@ namespace SimpleCalculator.Api.Factories
 
             if (options.CalculationType == CalculationType.WeightBased)
             {
+                if (options.Rate == default)
+                    throw new InvalidChargeConfigurationException($"Weight based charges require a {nameof(options.Rate)} value to be set.");
+
                 return new WeightBasedChargeConfiguration(
                     options.ChargeName,
                     options.DeminimisThreshold,
-                    options.Rate == null ? null as Rate : new Rate(options.Rate),
-                    options.MinimumPayable ?? null,
-                    options.MinimumCollectible ?? null);
+                    options.Rate.GetValueOrDefault(),
+                    options.MinimumPayable == null ? default : new Price(options.MinimumPayable),
+                    options.MinimumCollectible == null ? default : new Price(options.MinimumCollectible));
             }
-                
-
 
             if (options.CalculationType == CalculationType.RateBased)
-                return new RateBasedChargeConfiguration(options);
+            {
+                if (!options.BaseCharges.Any())
+                    throw new InvalidChargeConfigurationException("Rate based charges need to have at least one base charge to be applied on top of.");
 
-
+                return new RateBasedChargeConfiguration(
+                    options.ChargeName,
+                    options.DeminimisThreshold,
+                    options.BaseCharges.Select(bc => new ChargeName(bc)),
+                    options.Rate == null ? default : new Rate(options.Rate.GetValueOrDefault()),
+                    options.MinimumPayable == null ? default : new Price(options.MinimumPayable),
+                    options.MinimumCollectible == null ? default : new Price(options.MinimumCollectible));
+            }
 
             throw new ArgumentException("Unknown charge type", nameof(options.CalculationType));
         }

@@ -21,12 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SimpleCalculator.Api\SimpleCalculator.Api.csproj" />
     <ProjectReference Include="..\..\src\SimpleCalculator.Domain\SimpleCalculator.Domain.csproj" />
-    <ProjectReference Include="..\SimpleCalculator.Tests.Shared\SimpleCalculator.Tests.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

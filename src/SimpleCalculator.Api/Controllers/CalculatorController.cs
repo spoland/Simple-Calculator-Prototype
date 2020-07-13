@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SimpleCalculator.Api.Contracts;
+using SimpleCalculator.Api.Factories;
 using SimpleCalculator.Api.Options;
 using SimpleCalculator.Api.RequestHandlers;
 using SimpleCalculator.Domain.Entities;
@@ -48,7 +49,11 @@ namespace SimpleCalculator.Api.Controllers
                 currency: new Currency(requestDto.CurrencyIso),
                 orderItems: orderItems);
 
-            var calculatorConfiguration = new CalculatorConfiguration(_options.Single(x => x.Id == requestDto.CountryIso));
+            var config = _options.Single(x => x.Id == requestDto.CountryIso);
+            var baseCharges = config.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
+            var chargeConfigurations = config.ChargeConfigurations.Select(config => ChargeConfigurationFactory.CreateFromOptions(config));
+
+            var calculatorConfiguration = new CalculatorConfiguration(chargeConfigurations, baseCharges);
 
             var request = new ForwardCalculatorRequest(order, calculatorConfiguration);
             var response = await _mediator.Send(request);
@@ -77,7 +82,11 @@ namespace SimpleCalculator.Api.Controllers
                 orderItems: orderItems
             );
 
-            var calculatorConfiguration = new CalculatorConfiguration(_options.Single(x => x.Id == requestDto.CountryIso));
+            var config = _options.Single(x => x.Id == requestDto.CountryIso);
+            var baseCharges = config.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
+            var chargeConfigurations = config.ChargeConfigurations.Select(config => ChargeConfigurationFactory.CreateFromOptions(config));
+
+            var calculatorConfiguration = new CalculatorConfiguration(chargeConfigurations, baseCharges);
 
             var request = new ReverseCalculatorRequest(order, calculatorConfiguration);
             var response = await _mediator.Send(request);
