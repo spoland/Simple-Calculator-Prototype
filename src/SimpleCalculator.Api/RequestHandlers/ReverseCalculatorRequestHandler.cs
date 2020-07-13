@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace SimpleCalculator.Api.RequestHandlers
 {
-    public class ReverseCalculatorRequestHandler : IRequestHandler<ReverseCalculatorRequest, IEnumerable<OrderChargeDto>>
+    public class ReverseCalculatorRequestHandler : IRequestHandler<ReverseCalculatorRequest, IEnumerable<OrderChargeResponse>>
     {
-        public Task<IEnumerable<OrderChargeDto>> Handle(ReverseCalculatorRequest request, CancellationToken cancellationToken)
+        public Task<IEnumerable<OrderChargeResponse>> Handle(ReverseCalculatorRequest request, CancellationToken cancellationToken)
         {
             // Loop through each range until correct one found
             foreach (var range in request.CalculatorConfiguration.CalculationRanges.Reverse())
@@ -24,7 +24,7 @@ namespace SimpleCalculator.Api.RequestHandlers
                 reverseCalculator?.Invoke(request.Order);
 
                 // Create forward calc
-                var forwardCalculator = ForwardCalculatorFactory.Create(range, request.CalculatorConfiguration.Excess);
+                var forwardCalculator = ForwardCalculatorFactory.Create(range);
 
                 // Run forward calc
                 forwardCalculator?.Invoke(request.Order);
@@ -46,7 +46,7 @@ namespace SimpleCalculator.Api.RequestHandlers
 
             return Task.FromResult(request.Order.Charges
                 .OrderBy(c => c.BaseChargeName.Value)
-                .Select(c => new OrderChargeDto(c.ChargeName, c.ChargeAmount)));
+                .Select(c => new OrderChargeResponse(c.ChargeName, c.ChargeAmount)));
         }
     }
 }

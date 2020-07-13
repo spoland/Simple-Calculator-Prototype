@@ -18,8 +18,7 @@ namespace SimpleCalculator.Domain.Models
         /// <param name="calculatorConfigurationOptions">The calculator configuration options.</param>
         public CalculatorConfiguration(
             IEnumerable<ChargeConfiguration> chargeConfigurations,
-            IEnumerable<ChargeName> deminimisBaseCharges,
-            ExcessConfiguration? excessConfiguration = null)
+            IEnumerable<ChargeName> deminimisBaseCharges)
         {
             if (!chargeConfigurations.Any())
                 throw new ArgumentException("At least one configuration must exist in order to perform a calculation.");
@@ -38,15 +37,9 @@ namespace SimpleCalculator.Domain.Models
                     throw new InvalidChargeConfigurationException("Duplicate charge configurations have been specified in the same range.");
             });
 
-            Excess = excessConfiguration;
             CalculationRanges = CreateRanges(configurationGroups);
             DeminimisBaseCharges = deminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
         }
-
-        /// <summary>
-        /// The excess amount.
-        /// </summary>
-        public ExcessConfiguration? Excess { get; }
 
         /// <summary>
         /// A collection of <see cref="CalculationRange"/> objects.

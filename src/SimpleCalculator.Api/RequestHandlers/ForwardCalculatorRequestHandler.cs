@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace SimpleCalculator.Api.RequestHandlers
 {
-    public class ForwardCalculatorRequestHandler : IRequestHandler<ForwardCalculatorRequest, IEnumerable<OrderChargeDto>>
+    public class ForwardCalculatorRequestHandler : IRequestHandler<ForwardCalculatorRequest, IEnumerable<OrderChargeResponse>>
     {
-        public Task<IEnumerable<OrderChargeDto>> Handle(ForwardCalculatorRequest request, CancellationToken cancellationToken)
+        public Task<IEnumerable<OrderChargeResponse>> Handle(ForwardCalculatorRequest request, CancellationToken cancellationToken)
         {
             // Determine deminimis base
             var deminimisBase = request.Order.Charges.Where(chargeName => request.CalculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
@@ -22,7 +22,7 @@ namespace SimpleCalculator.Api.RequestHandlers
             var range = request.CalculatorConfiguration.GetRangeForBasePrice(new Price(request.Order.Currency, deminimisBase));
 
             // Create a forward calculator for the selected range
-            var calculator = ForwardCalculatorFactory.Create(range, request.CalculatorConfiguration.Excess);
+            var calculator = ForwardCalculatorFactory.Create(range);
 
             foreach (var item in request.Order.OrderItems)
             {
@@ -42,7 +42,7 @@ namespace SimpleCalculator.Api.RequestHandlers
 
             return Task.FromResult(request.Order.Charges
                 .OrderBy(c => c.BaseChargeName.Value)
-                .Select(c => new OrderChargeDto(c.ChargeName, c.ChargeAmount)));
+                .Select(c => new OrderChargeResponse(c.ChargeName, c.ChargeAmount)));
         }
     }
 }

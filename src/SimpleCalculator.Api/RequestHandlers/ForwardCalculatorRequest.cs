@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace SimpleCalculator.Api.RequestHandlers
 {
-    public class ForwardCalculatorRequest : IRequest<IEnumerable<OrderChargeDto>>
+    public class ForwardCalculatorRequest : IRequest<IEnumerable<OrderChargeResponse>>
     {
         public ForwardCalculatorRequest(Order order, CalculatorConfiguration calculatorConfiguration)
         {

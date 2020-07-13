@@ -1,6 +1,5 @@
 ﻿using SimpleCalculator.Domain.Abstractions;
 using SimpleCalculator.Domain.Calculators;
-using SimpleCalculator.Domain.Calculators.Charge;
 using SimpleCalculator.Domain.Calculators.Constraints;
 using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Entities;
@@ -15,18 +14,10 @@ namespace SimpleCalculator.Domain.Factories
     {
         public delegate void Calculator(Order order);
 
-        public static Calculator? Create(CalculationRange range, ExcessConfiguration? excess)
+        public static Calculator? Create(CalculationRange range)
         {
             Calculator? calculatorDelegate = null;
-            ExcessCalculator? excessCalculator = null;
-
-            // Excess is a special case and should execute first and last in the calculation pipeline.
-            if (excess != null)
-            {
-                excessCalculator = new ExcessCalculator(excess);
-                calculatorDelegate = excessCalculator.Calculate;
-            }
-            
+           
             // Loop through each charge configuration (which are in order of execution) - and add the required
             // calculator to the delegate.
             foreach (var config in range.ChargeConfigurations)
@@ -88,9 +79,6 @@ namespace SimpleCalculator.Domain.Factories
                 // Add created calculator to delegate
                 calculatorDelegate += calculator.Calculate;
             }
-
-            // If an excess calculator has been added, add it to the end to do clean up task
-            if (excessCalculator != null) calculatorDelegate += excessCalculator.Calculate;
 
             return calculatorDelegate;
         }

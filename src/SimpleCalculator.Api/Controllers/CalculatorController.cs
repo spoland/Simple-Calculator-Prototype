@@ -30,7 +30,7 @@ namespace SimpleCalculator.Api.Controllers
         }
 
         [HttpPost("forward")]
-        public async Task<ActionResult<IEnumerable<OrderChargeDto>>> ForwardCalculate(OrderDto requestDto)
+        public async Task<ActionResult<IEnumerable<OrderChargeResponse>>> ForwardCalculate(OrderRequest requestDto)
         {
             var currency = new Currency(requestDto.CurrencyIso);
             var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);
@@ -62,7 +62,7 @@ namespace SimpleCalculator.Api.Controllers
         }
 
         [HttpPost("reverse")]
-        public async Task<ActionResult<IEnumerable<OrderChargeDto>>> ReverseCalculate(OrderDto requestDto)
+        public async Task<ActionResult<IEnumerable<OrderChargeResponse>>> ReverseCalculate(OrderRequest requestDto)
         {
             var currency = new Currency(requestDto.CurrencyIso);
             var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);

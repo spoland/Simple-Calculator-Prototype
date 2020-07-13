@@ -2,9 +2,8 @@
 {
     public enum CalculationType
     {
-        BasePrice,
         Fixed,
         RateBased,
-        WeightBased                
+        WeightBased
     }
 }

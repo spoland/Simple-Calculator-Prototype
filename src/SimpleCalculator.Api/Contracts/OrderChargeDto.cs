@@ -1,8 +1,8 @@
 ﻿namespace SimpleCalculator.Api.Contracts
 {
-    public class OrderChargeDto
+    public class OrderChargeResponse
     {
-        public OrderChargeDto(string name, string amount)
+        public OrderChargeResponse(string name, string amount)
         {
             Name = name;
             Amount = amount;

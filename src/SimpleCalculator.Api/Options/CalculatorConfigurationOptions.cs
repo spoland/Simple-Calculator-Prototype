@@ -9,8 +9,6 @@ namespace SimpleCalculator.Api.Options
         /// </summary>
         public string Id { get; set; } = string.Empty;
 
-        public ExcessConfigurationOptions? Excess { get; set; } = null;
-
         /// <summary>
         /// A list of charges that should be used when determining what the base price to use
         /// for calculations is.

@@ -1,6 +1,6 @@
 ﻿namespace SimpleCalculator.Api.Contracts
 {
-    public class OrderItemDto
+    public class OrderItemRequest
     {
         public int Quantity { get; set; } = 0;
 
