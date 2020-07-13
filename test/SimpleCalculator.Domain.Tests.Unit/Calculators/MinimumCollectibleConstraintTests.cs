@@ -38,7 +38,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName).ChargeAmount.Value.Should().Be(0);
+            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(0);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName).ChargeAmount.Value.Should().Be(0);
+            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(0);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName).ChargeAmount.Value.Should().Be(10);
+            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(10);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName).ChargeAmount.Value.Should().Be(20);
+            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(20);
         }
     }
 }

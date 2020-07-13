@@ -37,7 +37,7 @@ namespace SimpleCalculator.Domain.Calculators
                 // Loop through each of the charges that this charge type is to be calculated on top of.
                 foreach (var baseChargeName in _baseCharges)
                 {
-                    var baseChargeAmount = item.GetCharge(baseChargeName);
+                    var baseChargeAmount = item.GetCharge(baseChargeName, order.Currency);
 
                     // Check to see if a charge has been calculated for this charge type.
                     // If so, do a forward calculation - the calculated charges can be removed from the 

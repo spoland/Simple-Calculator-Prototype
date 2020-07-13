@@ -13,10 +13,10 @@ namespace SimpleCalculator.Domain.Calculators.Charge
             foreach (var item in order.OrderItems)
             {
                 // Sum up all known charges
-                var knownCharges = item.Charges.Where(x => x.ChargeName.Value != ChargeNames.InputItem).Select(x => x.ChargeAmount).Sum();
+                var knownCharges = item.Charges.Where(x => x.ChargeName.Value != ChargeNames.InputItem).Select(x => x.ChargeAmount).Sum(order.Currency);
 
                 // Remove known charges from inclusive price
-                var partiallyReversedItemPrice = item.GetCharge(ChargeNames.InputItem).ChargeAmount - knownCharges;
+                var partiallyReversedItemPrice = item.GetCharge(ChargeNames.InputItem, order.Currency).ChargeAmount - knownCharges;
 
                 // Reverse out the remaining charges using the calculated reverse rates
                 var itemPrice = partiallyReversedItemPrice.Value / (1 + item.ReverseRates.Sum(x => x.Rate.AsDecimal));

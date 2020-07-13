@@ -15,7 +15,7 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// <returns></returns>
         public static ChargeName FromBaseChargeName(ChargeName chargeName, ChargeName baseChargeName)
         {
-            if (chargeName.Value == ChargeNames.Item)
+            if (chargeName.Value == ChargeNames.Item || chargeName.Value == ChargeNames.Delivery)
                 return new ChargeName(chargeName.Value);
 
             return new ChargeName($"{chargeName}On{baseChargeName}");

@@ -14,11 +14,11 @@ namespace SimpleCalculator.Domain.Entities
 
         public Order(Country country, Currency currency, List<OrderItem> orderItems)
         {
-            CountryIso = country;
-            CurrencyIso = currency;
+            Country = country;
+            Currency = currency;
             _orderItems = orderItems;
 
-            TotalOrderPrice = orderItems.Select(oi => oi.GetCharge(ChargeNames.InputItem).ChargeAmount).Sum();
+            TotalOrderPrice = orderItems.Select(oi => oi.GetCharge(ChargeNames.InputItem, currency).ChargeAmount).Sum(currency);
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -31,12 +31,12 @@ namespace SimpleCalculator.Domain.Entities
         /// <summary>
         /// the delivery country ISO
         /// </summary>
-        public Country CountryIso { get; }
+        public Country Country { get; }
 
         /// <summary>
         /// The calculation currency ISO
         /// </summary>
-        public Currency CurrencyIso { get; }
+        public Currency Currency { get; }
 
         /// <summary>
         /// The order items collection
@@ -52,9 +52,9 @@ namespace SimpleCalculator.Domain.Entities
         /// Get the requested order charge, if the charge name is a base charge it will return the total 
         /// charge amount including sub charges (Vat, Vat On Duty etc.)
         /// </summary>
-        public OrderCharge GetCharge(ChargeName chargeName)
+        public OrderCharge GetCharge(ChargeName chargeName, Currency currency)
         {
-            var chargeAmount = _orderItems.Select(oi => oi.GetCharge(chargeName).ChargeAmount).Sum();
+            var chargeAmount = _orderItems.Select(oi => oi.GetCharge(chargeName, currency).ChargeAmount).Sum(currency);
             return new OrderCharge(chargeName, chargeAmount, chargeName);
         }
 
@@ -69,7 +69,7 @@ namespace SimpleCalculator.Domain.Entities
 
         public OrderCharge GetTotalCalculatedCharge()
         {
-            var totalOrderCharges = OrderItems.Select(oi => oi.GetTotalCalculatedCharge()).Select(x => x.ChargeAmount).Sum();
+            var totalOrderCharges = OrderItems.Select(oi => oi.GetTotalCalculatedCharge(Currency)).Select(x => x.ChargeAmount).Sum(Currency);
             return new OrderCharge("Total", totalOrderCharges, "Total");
         }
 
@@ -79,7 +79,7 @@ namespace SimpleCalculator.Domain.Entities
         }
 
         public decimal RelativeOrderItemValue(OrderItem orderItem) 
-            => orderItem.GetCharge(ChargeNames.InputItem).ChargeAmount.Value / TotalOrderPrice.Value;
+            => orderItem.GetCharge(ChargeNames.InputItem, Currency).ChargeAmount.Value / TotalOrderPrice.Value;
 
         private Price TotalOrderPrice;
     }

@@ -22,7 +22,7 @@ namespace SimpleCalculator.Domain.Calculators
             foreach (var item in order.OrderItems)
             {
                 var chargeAmount = item.Weight.Value * _getRate(item).AsDecimal * item.Quantity.Value;
-                item.AddCharge(new OrderCharge(_chargeName, new Price(order.CurrencyIso, chargeAmount), _chargeName));
+                item.AddCharge(new OrderCharge(_chargeName, new Price(order.Currency, chargeAmount), _chargeName));
             }
         }
     }

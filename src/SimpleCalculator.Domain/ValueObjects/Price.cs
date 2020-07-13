@@ -49,12 +49,12 @@ namespace SimpleCalculator.Domain.ValueObjects
 
     public static class PriceExtensions 
     {
-        public static Price Sum(this IEnumerable<Price> source)
+        public static Price Sum(this IEnumerable<Price> source, Currency currency)
         {
             if (source.Any())
                 return source.Aggregate((x, y) => x + y);
 
-            return new Price("EUR0");
+            return new Price(currency, 0);
         }
     }
 }

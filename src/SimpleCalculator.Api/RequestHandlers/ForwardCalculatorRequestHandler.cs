@@ -19,14 +19,14 @@ namespace SimpleCalculator.Api.RequestHandlers
                 .Select(x => x.ChargeAmount.Value).Sum();
 
             // Get the correct range for the base price
-            var range = request.CalculatorConfiguration.GetRangeForBasePrice(new Price(request.Order.CurrencyIso, deminimisBase));
+            var range = request.CalculatorConfiguration.GetRangeForBasePrice(new Price(request.Order.Currency, deminimisBase));
 
             // Create a forward calculator for the selected range
             var calculator = ForwardCalculatorFactory.Create(range, request.CalculatorConfiguration.Excess);
 
             foreach (var item in request.Order.OrderItems)
             {
-                var inputPrice = item.GetCharge(ChargeNames.InputItem);
+                var inputPrice = item.GetCharge(ChargeNames.InputItem, request.Order.Currency);
                 item.AddCharge(new OrderCharge(ChargeNames.Item, inputPrice.ChargeAmount, ChargeNames.Item));
             };
 
@@ -36,7 +36,7 @@ namespace SimpleCalculator.Api.RequestHandlers
             // Add a total charge for visibility
             foreach (var item in request.Order.OrderItems)
             {
-                var totalItemCharge = item.GetTotalCalculatedCharge();
+                var totalItemCharge = item.GetTotalCalculatedCharge(request.Order.Currency);
                 item.AddCharge(totalItemCharge);
             }
 

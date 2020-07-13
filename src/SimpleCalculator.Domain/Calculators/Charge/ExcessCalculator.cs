@@ -29,7 +29,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
 
             if (!_excessApplied)
             {
-                var totalItemCharge = order.GetCharge(_excessChargeName);
+                var totalItemCharge = order.GetCharge(_excessChargeName, order.Currency);
 
                 if (totalItemCharge.ChargeAmount > _excessAmount)
                 {
@@ -38,7 +38,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                         var itemExcessAmount = _excessAmount * order.RelativeOrderItemValue(item);
                         var itemExcessCharge = new OrderCharge(itemExcessChargeName, itemExcessAmount, new ChargeName("excess"));
 
-                        var itemCharge = item.GetCharge(_excessChargeName);
+                        var itemCharge = item.GetCharge(_excessChargeName, order.Currency);
                         itemCharge.ChargeAmount -= itemExcessCharge.ChargeAmount;
 
                         item.AddCharge(itemExcessCharge);
@@ -51,8 +51,8 @@ namespace SimpleCalculator.Domain.Calculators.Charge
             {
                 foreach (var item in order.OrderItems)
                 {
-                    var itemExcessCharge = item.GetCharge(itemExcessChargeName);
-                    var itemCharge = item.GetCharge(_excessChargeName);
+                    var itemExcessCharge = item.GetCharge(itemExcessChargeName, order.Currency);
+                    var itemCharge = item.GetCharge(_excessChargeName, order.Currency);
                     
                     itemCharge.ChargeAmount += itemExcessCharge.ChargeAmount;
 
