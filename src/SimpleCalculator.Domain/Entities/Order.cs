@@ -12,13 +12,15 @@ namespace SimpleCalculator.Domain.Entities
     {
         private readonly List<OrderItem> _orderItems;
 
-        public Order(Country country, Currency currency, List<OrderItem> orderItems)
+        public Order(Country country, Currency currency, List<OrderItem> orderItems, Price deliveryPrice)
         {
             Country = country;
             Currency = currency;
             _orderItems = orderItems;
 
-            TotalOrderPrice = orderItems.Select(oi => oi.GetCharge(ChargeNames.InputItem, currency).ChargeAmount).Sum(currency);
+            TotalOrderPrice = orderItems.Select(oi => oi.GetChargeAmount(ChargeNames.InputItem, currency)).Sum(currency);
+
+            AddCharge(new OrderCharge(ChargeNames.InputDelivery, deliveryPrice, ChargeNames.InputDelivery));
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -52,10 +54,9 @@ namespace SimpleCalculator.Domain.Entities
         /// Get the requested order charge, if the charge name is a base charge it will return the total 
         /// charge amount including sub charges (Vat, Vat On Duty etc.)
         /// </summary>
-        public OrderCharge GetCharge(ChargeName chargeName, Currency currency)
+        public Price GetChargeAmount(ChargeName chargeName, Currency currency)
         {
-            var chargeAmount = _orderItems.Select(oi => oi.GetCharge(chargeName, currency).ChargeAmount).Sum(currency);
-            return new OrderCharge(chargeName, chargeAmount, chargeName);
+            return _orderItems.Select(oi => oi.GetChargeAmount(chargeName, currency)).Sum(currency);            
         }
 
         /// <summary>
@@ -79,7 +80,13 @@ namespace SimpleCalculator.Domain.Entities
         }
 
         public decimal RelativeOrderItemValue(OrderItem orderItem) 
-            => orderItem.GetCharge(ChargeNames.InputItem, Currency).ChargeAmount.Value / TotalOrderPrice.Value;
+            => orderItem.GetChargeAmount(ChargeNames.InputItem, Currency).Value / TotalOrderPrice.Value;
+
+        public void AddCharge(OrderCharge charge)
+        {
+            _orderItems.ForEach(oi =>
+                oi.AddCharge(new OrderCharge(charge.ChargeName, new Price(charge.ChargeAmount.Currency, charge.ChargeAmount.Value * RelativeOrderItemValue(oi)), charge.BaseChargeName)));
+        }
 
         private Price TotalOrderPrice;
     }

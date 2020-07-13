@@ -2,6 +2,7 @@
 using Moq;
 using SimpleCalculator.Domain.Abstractions;
 using SimpleCalculator.Domain.Calculators.Constraints;
+using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using SimpleCalculator.Tests.Shared.Builders;
@@ -30,7 +31,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             var order = _orderBuilder.WithOrderItems(new List<OrderItem> { orderItem }).Build();
             var calculator = Mock.Of<IChargeCalculator>();
 
-            orderItem.AddCharge(new OrderCharge(chargeName, "EUR9.99"));
+            orderItem.AddCharge(new OrderCharge(chargeName, "EUR9.99", ChargeNames.Item));
 
             var sut = new MinimumPayableConstraint(calculator, chargeName, "EUR10");
 
@@ -38,7 +39,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(10);
+            order.GetChargeAmount(chargeName, order.Currency).Value.Should().Be(10);
         }
 
         [Fact]
@@ -51,8 +52,8 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             var order = _orderBuilder.WithOrderItems(new List<OrderItem> { orderItem1, orderItem2 }).Build();
             var calculator = Mock.Of<IChargeCalculator>();
 
-            orderItem1.AddCharge(new OrderCharge(chargeName, "EUR4.99"));
-            orderItem1.AddCharge(new OrderCharge(chargeName, "EUR4.99"));
+            orderItem1.AddCharge(new OrderCharge(chargeName, "EUR4.99", ChargeNames.Item));
+            orderItem1.AddCharge(new OrderCharge(chargeName, "EUR4.99", ChargeNames.Item));
 
             var sut = new MinimumPayableConstraint(calculator, chargeName, "EUR10");
 
@@ -60,9 +61,9 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             sut.Calculate(order);
 
             // Assert
-            order.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(10);
-            orderItem1.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(5);
-            orderItem2.GetCharge(chargeName, order.Currency).ChargeAmount.Value.Should().Be(5);
+            order.GetChargeAmount(chargeName, order.Currency).Value.Should().Be(10);
+            orderItem1.GetChargeAmount(chargeName, order.Currency).Value.Should().Be(5);
+            orderItem2.GetChargeAmount(chargeName, order.Currency).Value.Should().Be(5);
         }
     }
 }

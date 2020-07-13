@@ -52,17 +52,17 @@ namespace SimpleCalculator.Domain.Factories
                     // RATE BASED CONFIGURATIONS
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.Rate != null:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
                             break;
                         }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Duty:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
                             break;
                         }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Vat:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
                             break;
                         }
 

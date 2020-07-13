@@ -10,6 +10,6 @@
 
         public decimal DutyRate { get; set; } = 0;
 
-        public decimal Price { get; set; }
+        public string Price { get; set; } = string.Empty;
     }
 }

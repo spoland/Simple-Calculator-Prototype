@@ -32,8 +32,7 @@ namespace SimpleCalculator.Api.Controllers
         [HttpPost("forward")]
         public async Task<ActionResult<IEnumerable<OrderChargeResponse>>> ForwardCalculate(OrderRequest requestDto)
         {
-            var currency = new Currency(requestDto.CurrencyIso);
-            var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);
+            var currency = new Currency(requestDto.Currency);            
 
             var orderItems = requestDto.OrderItems.Select(oi =>
                 new OrderItem(
@@ -41,17 +40,18 @@ namespace SimpleCalculator.Api.Controllers
                     weight: Weight.InKilograms(oi.Weight),
                     vatRate: new Rate(oi.VatRate),
                     dutyRate: new Rate(oi.DutyRate),
-                    inputPrice: new Price(currency, oi.Price)))
+                    inputPrice: oi.Price))
                 .ToList();
 
             var order = new Order(
-                country: new Country(requestDto.CountryIso),
-                currency: new Currency(requestDto.CurrencyIso),
-                orderItems: orderItems);
+                country: new Country(requestDto.DeclarationCountry),
+                currency: new Currency(requestDto.Currency),
+                orderItems: orderItems,
+                deliveryPrice: requestDto.DeliveryPrice);
 
-            var config = _options.Single(x => x.Id == requestDto.CountryIso);
+            var config = _options.Single(x => x.Id == requestDto.DeclarationCountry);
             var baseCharges = config.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
-            var chargeConfigurations = config.ChargeConfigurations.Select(config => ChargeConfigurationFactory.CreateFromOptions(config));
+            var chargeConfigurations = config.ChargeConfigurations.Select(config => ChargeConfigurationFactory.CreateFromOptions(config)).ToList();
 
             var calculatorConfiguration = new CalculatorConfiguration(chargeConfigurations, baseCharges);
 
@@ -64,8 +64,7 @@ namespace SimpleCalculator.Api.Controllers
         [HttpPost("reverse")]
         public async Task<ActionResult<IEnumerable<OrderChargeResponse>>> ReverseCalculate(OrderRequest requestDto)
         {
-            var currency = new Currency(requestDto.CurrencyIso);
-            var totalOrderCost = requestDto.OrderItems.Sum(x => x.Price);
+            var currency = new Currency(requestDto.Currency);
 
             var orderItems = requestDto.OrderItems.Select(oi =>
                     new OrderItem(
@@ -73,16 +72,16 @@ namespace SimpleCalculator.Api.Controllers
                         weight: Weight.InKilograms(oi.Weight),
                         vatRate: new Rate(oi.VatRate),
                         dutyRate: new Rate(oi.DutyRate),
-                        inputPrice: new Price(currency, oi.Price)))
+                        inputPrice: oi.Price))
                 .ToList();
 
             var order = new Order(
-                country: new Country(requestDto.CountryIso),
-                currency: new Currency(requestDto.CurrencyIso),
-                orderItems: orderItems
-            );
+                country: new Country(requestDto.DeclarationCountry),
+                currency: new Currency(requestDto.Currency),
+                orderItems: orderItems,
+                deliveryPrice: requestDto.DeliveryPrice);
 
-            var config = _options.Single(x => x.Id == requestDto.CountryIso);
+            var config = _options.Single(x => x.Id == requestDto.DeclarationCountry);
             var baseCharges = config.DeminimisBaseCharges.Select(chargeName => new ChargeName(chargeName));
             var chargeConfigurations = config.ChargeConfigurations.Select(config => ChargeConfigurationFactory.CreateFromOptions(config));
 

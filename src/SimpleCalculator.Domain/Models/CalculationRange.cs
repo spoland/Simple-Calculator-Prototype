@@ -40,7 +40,7 @@ namespace SimpleCalculator.Domain.Models
         /// as they know how to calculate charges.
         /// </summary>
         private IEnumerable<ChargeConfiguration> GetDependencies(ChargeConfiguration config) =>
-            config is RateBasedChargeConfiguration ? ((RateBasedChargeConfiguration)config).BaseCharges : Enumerable.Empty<ChargeConfiguration>();
+            config is RateBasedChargeConfiguration ? ((RateBasedChargeConfiguration)config).BaseChargeConfigurations : Enumerable.Empty<ChargeConfiguration>();
 
         /// <summary>
         /// A topological sorting algorithm used to determine the order in which calculations must be executed.

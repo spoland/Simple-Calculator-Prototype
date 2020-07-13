@@ -38,7 +38,7 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
 
             // Assert
             orderItem.Charges.Should()
-                .HaveCount(2).And
+                .HaveCount(3).And
                 .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 1);
         }
 
@@ -67,10 +67,10 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
 
             // Assert
             orderItem1.Charges.Should()
-                .HaveCount(2).And
+                .HaveCount(3).And
                 .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 1);
             orderItem2.Charges.Should()
-                .HaveCount(2).And
+                .HaveCount(3).And
                 .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 4);
         }
     }

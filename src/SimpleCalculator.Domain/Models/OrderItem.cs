@@ -26,7 +26,7 @@ namespace SimpleCalculator.Domain.Models
             _charges = new List<OrderCharge>();
             _reverseRates = new List<ReverseRate>();
 
-            _charges.Add(new OrderCharge(ChargeNames.InputItem, inputPrice));
+            _charges.Add(new OrderCharge(ChargeNames.InputItem, inputPrice, ChargeNames.InputItem));
         }
 
         /// <summary>
@@ -66,14 +66,14 @@ namespace SimpleCalculator.Domain.Models
         /// <param name="chargeName">The charge name being requested.</param>
         /// <param name="includeSubCharges">A <see cref="bool"/> value indicating whether all sub charges (e.g: VatOnDuty, VatOnFee) should be included when requesting a charge (e.g Vat)</param>
         /// <returns></returns>
-        public OrderCharge GetCharge(ChargeName chargeName, Currency currency)
+        public Price GetChargeAmount(ChargeName chargeName, Currency currency)
         {
             var chargeAmount = Charges
-                .Where(c => c.BaseChargeName == chargeName || c.BaseChargeName == ChargeName.Empty && c.ChargeName == chargeName)
+                .Where(c => c.BaseChargeName == chargeName || c.ChargeName == chargeName)
                 .Select(x => x.ChargeAmount)
                 .Sum(currency);
 
-            return new OrderCharge(chargeName, chargeAmount);
+            return chargeAmount;
         }
 
         public void AddCharge(OrderCharge charge)

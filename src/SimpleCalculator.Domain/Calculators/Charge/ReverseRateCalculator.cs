@@ -37,14 +37,14 @@ namespace SimpleCalculator.Domain.Calculators
                 // Loop through each of the charges that this charge type is to be calculated on top of.
                 foreach (var baseChargeName in _baseCharges)
                 {
-                    var baseChargeAmount = item.GetCharge(baseChargeName, order.Currency);
+                    var baseChargeAmount = item.GetChargeAmount(baseChargeName, order.Currency);
 
                     // Check to see if a charge has been calculated for this charge type.
                     // If so, do a forward calculation - the calculated charges can be removed from the 
                     // inclusive price before applying the reverse rate as they are known.
-                    if (baseChargeAmount.ChargeAmount.Value != 0)
+                    if (baseChargeAmount.Value != 0)
                     {
-                        var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;
+                        var chargeAmount = baseChargeAmount * _getRate(item).AsDecimal;
 
                         var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
 

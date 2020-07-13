@@ -24,16 +24,16 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
         {
             _chargeCalculator.Calculate(order);
 
-            var appliedCharge = order.GetCharge(_chargeName, order.Currency);
+            var appliedCharge = order.GetChargeAmount(_chargeName, order.Currency);
 
-            if (appliedCharge.ChargeAmount < _minimumPayable)
+            if (appliedCharge < _minimumPayable)
             {
                 order.RemoveCharge(_chargeName);
 
                 foreach(var item in order.OrderItems)
                 {
                     var minimumItemCharge = _minimumPayable * order.RelativeOrderItemValue(item);
-                    item.AddCharge(new OrderCharge(appliedCharge.ChargeName, minimumItemCharge, appliedCharge.BaseChargeName));
+                    item.AddCharge(new OrderCharge(_chargeName, minimumItemCharge, _chargeName));
                 }
             }
         }

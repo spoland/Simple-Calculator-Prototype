@@ -10,6 +10,7 @@ namespace SimpleCalculator.Tests.Shared.Builders
     {
         private Country? _country;
         private Currency? _currency;
+        private Price? _deliveryPrice;
 
         private List<OrderItem> _orderItems = new List<OrderItem>();
 
@@ -31,12 +32,19 @@ namespace SimpleCalculator.Tests.Shared.Builders
             return this;
         }
 
+        public OrderBuilder WithDeliveryPrice(Price deliveryPrice)
+        {
+            _deliveryPrice = deliveryPrice;
+            return this;
+        }
+
         public Order Build()
         {
             return new Order(
                 country: _country ?? CountryFakes.IE,
                 currency: _currency ?? CurrencyFakes.EUR,
-                orderItems: _orderItems);
+                orderItems: _orderItems,
+                deliveryPrice: _deliveryPrice ?? "EUR100");
         }
 
     }

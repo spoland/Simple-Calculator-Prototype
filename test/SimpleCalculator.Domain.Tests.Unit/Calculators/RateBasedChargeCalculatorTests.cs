@@ -35,7 +35,7 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
                 .WithQuantity(1)
                 .Build();
 
-            orderItem.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100)));
+            orderItem.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100), ChargeNames.Item));
             orderItem.AddCharge(new OrderCharge(ChargeNames.Duty, new Price(CurrencyFakes.EUR, 10), ChargeNames.Duty));
             orderItem.AddCharge(new OrderCharge("FeeOnDuty", new Price(CurrencyFakes.EUR, 5), ChargeNames.Fee));
 
@@ -48,10 +48,10 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
 
             // Assert
             orderItem.Charges.Should()
-                .HaveCount(7).And
+                .HaveCount(8).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 10).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 1).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.5m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFeeOnDuty" && x.ChargeAmount.Value == 0.5m);
         }
 
         [Fact]
@@ -73,10 +73,10 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
                 .WithQuantity(1)
                 .Build();
 
-            orderItem1.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100)));
+            orderItem1.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100), ChargeNames.Item));
             orderItem1.AddCharge(new OrderCharge("Duty", new Price(CurrencyFakes.EUR, 10), ChargeNames.Duty));
             orderItem1.AddCharge(new OrderCharge("FeeOnDuty", new Price(CurrencyFakes.EUR, 5), ChargeNames.Fee));
-            orderItem2.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100)));
+            orderItem2.AddCharge(new OrderCharge(ChargeNames.Item, new Price(CurrencyFakes.EUR, 100), ChargeNames.Item));
             orderItem2.AddCharge(new OrderCharge("Duty", new Price(CurrencyFakes.EUR, 10), ChargeNames.Duty));
             orderItem2.AddCharge(new OrderCharge("FeeOnDuty", new Price(CurrencyFakes.EUR, 5), ChargeNames.Fee));
 
@@ -89,15 +89,15 @@ namespace CalculatorPrototype.Domain.Tests.Unit.Services.ChargeCalculators
 
             // Assert
             orderItem1.Charges.Should()
-                .HaveCount(7).And
+                .HaveCount(8).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 10).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 1).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.5m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFeeOnDuty" && x.ChargeAmount.Value == 0.5m);
             orderItem2.Charges.Should()
-                .HaveCount(7).And
+                .HaveCount(8).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnItem" && x.ChargeAmount.Value == 5).And
                 .ContainSingle(x => x.ChargeName.Value == "VatOnDuty" && x.ChargeAmount.Value == 0.5m).And
-                .ContainSingle(x => x.ChargeName.Value == "VatOnFee" && x.ChargeAmount.Value == 0.25m);
+                .ContainSingle(x => x.ChargeName.Value == "VatOnFeeOnDuty" && x.ChargeAmount.Value == 0.25m);
         }
     }
 }

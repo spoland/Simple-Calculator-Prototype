@@ -4,6 +4,7 @@ using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleCalculator.Domain.Calculators
 {
@@ -27,19 +28,26 @@ namespace SimpleCalculator.Domain.Calculators
         {
             foreach (var item in order.OrderItems)
             {
+                // For each base charge that this charge should be calculated on top of (item, duty, vat etc.)
                 foreach (var baseChargeName in _baseCharges)
                 {
-                    var baseChargeAmount = item.GetCharge(baseChargeName, order.Currency);
+                    // All of the charges that we need to calculate on top of
+                    // e.g if applying on top of item and vat, and vat was applied on item, the charges we need to calculate on are:
+                    // item, vatOnItem
+                    var baseCharges = item.Charges.Where(c => c.BaseChargeName == baseChargeName);
 
-                    if (baseChargeAmount.ChargeAmount.Value == 0)
-                        continue;
-                                        
-                    var chargeAmount = baseChargeAmount.ChargeAmount * _getRate(item).AsDecimal;
-                                        
-                    var chargeName = ChargeName.FromBaseChargeName(_chargeName, baseChargeName);
-                                        
-                    item.AddCharge(new OrderCharge(chargeName, chargeAmount, _chargeName));
-                }                
+                    foreach(var charge in baseCharges.ToList())
+                    {
+                        if (charge.ChargeAmount.Value == 0)
+                            continue;
+
+                        var chargeAmount = charge.ChargeAmount * _getRate(item).AsDecimal;
+
+                        var chargeName = ChargeName.FromBaseChargeName(_chargeName, charge.ChargeName);
+
+                        item.AddCharge(new OrderCharge(chargeName, chargeAmount, _chargeName));
+                    }
+                }
             }
         }
     }

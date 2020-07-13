@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace SimpleCalculator.Domain.ValueObjects
 {
-    [DebuggerDisplay("{Name}{ChargeName}")]
+    [DebuggerDisplay("{ChargeName}{ChargeAmount}")]
     public class OrderCharge : ValueObject
     {
         /// <summary>
@@ -13,10 +13,10 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// <param name="name"></param>
         /// <param name="amount"></param>
         /// <param name="baseChargeName"></param>
-        public OrderCharge(ChargeName name, Price amount, ChargeName? baseChargeName = null)
+        public OrderCharge(ChargeName name, Price amount, ChargeName baseChargeName)
         {
             ChargeName = name;
-            BaseChargeName = baseChargeName ?? ChargeName.Empty;
+            BaseChargeName = baseChargeName;
 
             ChargeAmount = amount;
         }

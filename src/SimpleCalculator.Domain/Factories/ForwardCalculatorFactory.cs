@@ -54,17 +54,17 @@ namespace SimpleCalculator.Domain.Factories
                     // RATE BASED CONFIGURATIONS
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.Rate != null:
                     {                        
-                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseCharges);
                         break;
                     }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Duty:
                     {
-                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseCharges);
                         break;
                     }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Vat:
                     {
-                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseCharges.Select(x => x.ChargeName));
+                        calculator = new RateBasedChargeCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseCharges);
                         break;
                     }
 

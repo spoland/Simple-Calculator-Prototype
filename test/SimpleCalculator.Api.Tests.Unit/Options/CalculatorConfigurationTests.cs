@@ -170,15 +170,15 @@ namespace SimpleCalculator.Domain.Tests.Unit
 
             // Assert
             configurations.Single(x => x.ChargeName.Value == "Duty")
-                .As<RateBasedChargeConfiguration>().BaseCharges.Should()
+                .As<RateBasedChargeConfiguration>().BaseChargeConfigurations.Should()
                 .BeEmpty();
 
             configurations.Single(x => x.ChargeName.Value == "Vat")
-                .As<RateBasedChargeConfiguration>().BaseCharges.Should()
+                .As<RateBasedChargeConfiguration>().BaseChargeConfigurations.Should()
                 .OnlyContain(x => x.ChargeName.Value == "Duty");
 
             configurations.Single(x => x.ChargeName.Value == "Fee")
-                .As<RateBasedChargeConfiguration>().BaseCharges.Should()
+                .As<RateBasedChargeConfiguration>().BaseChargeConfigurations.Should()
                 .ContainSingle(x => x.ChargeName.Value == "Duty").And
                 .ContainSingle(x => x.ChargeName.Value == "Vat");
         }

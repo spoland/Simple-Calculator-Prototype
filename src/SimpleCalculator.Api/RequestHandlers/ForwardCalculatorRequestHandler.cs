@@ -26,8 +26,11 @@ namespace SimpleCalculator.Api.RequestHandlers
 
             foreach (var item in request.Order.OrderItems)
             {
-                var inputPrice = item.GetCharge(ChargeNames.InputItem, request.Order.Currency);
-                item.AddCharge(new OrderCharge(ChargeNames.Item, inputPrice.ChargeAmount, ChargeNames.Item));
+                var inputItemPrice = item.GetChargeAmount(ChargeNames.InputItem, request.Order.Currency);
+                var inputDeliveryPrice = item.GetChargeAmount(ChargeNames.InputDelivery, request.Order.Currency);
+
+                item.AddCharge(new OrderCharge(ChargeNames.Item, inputItemPrice, ChargeNames.Item));
+                item.AddCharge(new OrderCharge(ChargeNames.Delivery, inputDeliveryPrice, ChargeNames.Delivery));
             };
 
             // Run calculator

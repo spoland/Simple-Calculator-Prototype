@@ -24,9 +24,9 @@ namespace SimpleCalculator.Domain.Calculators.Constraints
         {
             _chargeCalculator.Calculate(order);
 
-            var appliedCharge = order.GetCharge(_chargeName, order.Currency);
+            var appliedCharge = order.GetChargeAmount(_chargeName, order.Currency);
 
-            if (appliedCharge.ChargeAmount < _minimumCollectible)
+            if (appliedCharge < _minimumCollectible)
                 order.RemoveCharge(_chargeName);
         }
     }

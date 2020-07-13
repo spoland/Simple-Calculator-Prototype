@@ -21,11 +21,13 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
             _baseChargeNames = baseChargeNames.ToList();
         }
 
+        public IEnumerable<ChargeName> BaseCharges => _baseChargeNames;
+
         /// <summary>
         /// Determines what charge types this charge should be applied
         /// on top of. These charges must be calculated first.
         /// </summary>
-        public IEnumerable<ChargeConfiguration> BaseCharges { get; private set; } = Enumerable.Empty<ChargeConfiguration>();
+        public IEnumerable<ChargeConfiguration> BaseChargeConfigurations { get; private set; } = Enumerable.Empty<ChargeConfiguration>();
 
         /// <summary>
         /// Set the charge configurations that this charge depends on
@@ -33,7 +35,7 @@ namespace SimpleCalculator.Domain.Models.ChargeConfigurations
         /// <param name="configurations">A list of all configurations that are found in the same deminimis region.</param>
         public void SetDependencies(IEnumerable<ChargeConfiguration> configurations)
         {
-            BaseCharges = configurations.Where(c => _baseChargeNames.Contains(c.ChargeName.Value));
+            BaseChargeConfigurations = configurations.Where(c => _baseChargeNames.Contains(c.ChargeName.Value));
         }
 
         /// <summary>

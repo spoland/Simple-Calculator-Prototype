@@ -3,23 +3,23 @@
 
     // No charges are on top of any other charge
     {
-      "Id": "IE0",
-      "DeminimisBaseCharges": [ "Item" ],
+      "Id": "AA",
+      "DeminimisBaseCharges": [ "Item", "Delivery" ],
       "ChargeConfigurations": [
         {
-          "Name": "Duty",
+          "ChargeName": "Duty",
           "CalculationType": "RateBased",
-          "BaseCharges": [ "Item" ],
+          "BaseCharges": [ "Item", "Delivery" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Vat",
+          "ChargeName": "Vat",
           "CalculationType": "RateBased",
-          "BaseCharges": [ "Item" ],
+          "BaseCharges": [ "Item", "Delivery", "Duty" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Interest",
+          "ChargeName": "Interest",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item" ],
           "Rate": 10,
@@ -30,37 +30,37 @@
 
     // All charges are on top of other charges
     {
-      "Id": "IE1",
+      "Id": "BB",
       "DeminimisBaseCharges": [ "Item" ],
       "ChargeConfigurations": [
         {
-          "Name": "Duty",
+          "ChargeName": "Duty",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Vat",
+          "ChargeName": "Vat",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Interest",
+          "ChargeName": "Interest",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty", "Vat" ],
           "Rate": 10,
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "CrazyNewCharge",
+          "ChargeName": "CrazyNewCharge",
           "Rate": 20,
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Vat" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "LuxuryFee",
+          "ChargeName": "LuxuryFee",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty", "Vat", "Interest" ],
           "Rate": 10,
@@ -71,36 +71,36 @@
 
     // A weight and fixed rate charge
     {
-      "Id": "IE2",
+      "Id": "CC",
       "DeminimisBaseCharges": [ "Item" ],
       "ChargeConfigurations": [
         {
-          "Name": "Duty",
+          "ChargeName": "Duty",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Vat",
+          "ChargeName": "Vat",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Interest",
+          "ChargeName": "Interest",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Vat" ],
           "Rate": 10,
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Fee",
+          "ChargeName": "Fee",
           "CalculationType": "WeightBased",
           "Rate": 5,
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "FixedFee",
+          "ChargeName": "FixedFee",
           "CalculationType": "Fixed",
           "FixedChargeAmount": "EUR50",
           "DeminimisThreshold": "EUR0"
@@ -110,32 +110,32 @@
 
     // Multiple ranges, duty is 20% over 100 euro order
     {
-      "Id": "IE3",
+      "Id": "DD",
       "DeminimisBaseCharges": [ "Item" ],
       "ChargeConfigurations": [
         {
-          "Name": "Duty",
+          "ChargeName": "Duty",
           "CalculationType": "RateBased",
           "Rate": 10,
           "BaseCharges": [ "Item" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Vat",
+          "ChargeName": "Vat",
           "Rate": 10,
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty" ],
           "DeminimisThreshold": "EUR0"
         },
         {
-          "Name": "Vat",
+          "ChargeName": "Vat",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty" ],
           "Rate": 20,
           "DeminimisThreshold": "EUR100"
         },
         {
-          "Name": "Fee",
+          "ChargeName": "Fee",
           "CalculationType": "Fixed",
           "FixedChargeAmount": "EUR10",
           "DeminimisThreshold": "EUR200"

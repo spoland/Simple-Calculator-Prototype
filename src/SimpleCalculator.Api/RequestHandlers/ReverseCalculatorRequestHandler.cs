@@ -30,14 +30,14 @@ namespace SimpleCalculator.Api.RequestHandlers
                 forwardCalculator?.Invoke(request.Order);
 
                 // Get and compare charges
-                var inputCharge = request.Order.GetCharge(ChargeNames.InputItem, request.Order.Currency);
+                var inputCharge = request.Order.GetChargeAmount(ChargeNames.InputItem, request.Order.Currency);
                 var totalCharge = request.Order.GetTotalCalculatedCharge();
 
                 // Determine deminimis base
                 var deminimisBase = request.Order.Charges.Where(chargeName => request.CalculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
                     .Select(x => x.ChargeAmount.Value).Sum();
 
-                if (inputCharge.ChargeAmount == totalCharge.ChargeAmount && new Price(request.Order.Currency, deminimisBase) >= range.DeminimisThreshold)
+                if (inputCharge == totalCharge.ChargeAmount && new Price(request.Order.Currency, deminimisBase) >= range.DeminimisThreshold)
                     break;
 
                 // if charges don't match reset and run again

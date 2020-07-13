@@ -5,7 +5,7 @@ namespace SimpleCalculator.Domain.Abstractions
 {
     public interface IChargeable
     {
-        public OrderCharge GetCharge(ChargeName chargeName, Currency currency);
+        public Price GetChargeAmount(ChargeName chargeName, Currency currency);
 
         public void RemoveCharge(ChargeName chargeName);
 
