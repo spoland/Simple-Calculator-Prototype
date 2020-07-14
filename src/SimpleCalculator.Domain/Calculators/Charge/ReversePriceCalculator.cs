@@ -25,7 +25,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
             {
                 // Sum up all known charges
                 var knownCharges = item.Charges
-                    .Where(x => !x.IsInputCharge)
+                    .Where(x => !x.InputCharge)
                     .Where(x => x.ChargeName != ChargeNames.Item && x.ChargeName != ChargeNames.Delivery)
                     .Select(x => x.ChargeAmount).Sum(order.Currency);
 
@@ -33,7 +33,7 @@ namespace SimpleCalculator.Domain.Calculators.Charge
                 var partiallyReversedPrice = item.GetChargeAmount(_inputChargeName, order.Currency) - knownCharges;
 
                 // Reverse out the remaining charges using the calculated reverse rates
-                var applicableRates = item.ReverseRates.Where(x => x.ChargeName.Value.Contains(_chargeName));
+                var applicableRates = item.ReverseRates.Where(x => x.ChargeName.Value.EndsWith(_chargeName));
                 var itemPrice = partiallyReversedPrice.Value / (1 + applicableRates.Sum(x => x.Rate.AsDecimal));
 
                 // Add the item charge

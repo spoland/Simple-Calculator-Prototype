@@ -17,12 +17,12 @@ namespace SimpleCalculator.Domain.ValueObjects
             ChargeName name,
             Price amount,
             ChargeName baseChargeName,
-            bool isInputCharge = false)
+            bool inputCharge = false)
         {
             ChargeName = name;
             ChargeAmount = amount;
             BaseChargeName = baseChargeName;
-            IsInputCharge = isInputCharge;
+            InputCharge = inputCharge;
         }
 
         /// <summary>
@@ -44,7 +44,13 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// </summary>
         public Price ChargeAmount { get; }
 
-        public bool IsInputCharge { get; }
+        /// <summary>
+        /// Gets a value indicating whether this charge is an [input charge].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [input charge]; otherwise, <c>false</c>.
+        /// </value>
+        public bool InputCharge { get; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

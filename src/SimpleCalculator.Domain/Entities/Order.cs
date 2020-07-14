@@ -20,7 +20,7 @@ namespace SimpleCalculator.Domain.Entities
 
             TotalOrderPrice = orderItems.Select(oi => oi.GetChargeAmount(ChargeNames.InputItem, currency)).Sum(currency);
 
-            AddCharge(new OrderCharge(ChargeNames.InputDelivery, deliveryPrice, ChargeNames.InputDelivery, isInputCharge: true));
+            AddCharge(new OrderCharge(ChargeNames.InputDelivery, deliveryPrice, ChargeNames.InputDelivery, inputCharge: true));
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -83,7 +83,7 @@ namespace SimpleCalculator.Domain.Entities
                     charge.ChargeName,
                     new Price(charge.ChargeAmount.Currency, charge.ChargeAmount.Value * RelativeOrderItemValue(oi)),
                     charge.BaseChargeName,
-                    charge.IsInputCharge)));
+                    charge.InputCharge)));
         }
 
         private Price TotalOrderPrice;

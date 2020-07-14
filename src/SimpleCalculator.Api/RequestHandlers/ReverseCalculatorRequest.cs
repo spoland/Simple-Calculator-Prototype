@@ -2,11 +2,10 @@
 using SimpleCalculator.Api.Contracts;
 using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Models;
-using System.Collections.Generic;
 
 namespace SimpleCalculator.Api.RequestHandlers
 {
-    public class ReverseCalculatorRequest : IRequest<IEnumerable<OrderChargeResponse>>
+    public class ReverseCalculatorRequest : IRequest<OrderResponse>
     {
         public ReverseCalculatorRequest(Order order, CalculatorConfiguration calculatorConfiguration)
         {

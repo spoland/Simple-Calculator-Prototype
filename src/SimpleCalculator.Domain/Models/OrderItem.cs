@@ -26,7 +26,7 @@ namespace SimpleCalculator.Domain.Models
             _charges = new List<OrderCharge>();
             _reverseRates = new List<ReverseRate>();
 
-            _charges.Add(new OrderCharge(ChargeNames.InputItem, inputPrice, ChargeNames.InputItem, isInputCharge: true));
+            _charges.Add(new OrderCharge(ChargeNames.InputItem, inputPrice, ChargeNames.InputItem, inputCharge: true));
         }
 
         /// <summary>
@@ -81,12 +81,6 @@ namespace SimpleCalculator.Domain.Models
             _charges.Add(charge);
         }
 
-        public OrderCharge GetTotalCalculatedCharge(Currency currency)
-        {
-            var totalCharge = _charges.Where(x => !x.ChargeName.Value.Contains("Input")).Select(x => x.ChargeAmount).Sum(currency);
-            return new OrderCharge("Total", totalCharge, "Total");
-        }
-
         public void RemoveCharge(ChargeName chargeName)
         {
             _charges.RemoveAll(x => x.ChargeName == chargeName || x.BaseChargeName == chargeName);
@@ -94,7 +88,7 @@ namespace SimpleCalculator.Domain.Models
 
         public void ResetCalculationProperties()
         {
-            _charges.RemoveAll(x => x.ChargeName.Value != ChargeNames.InputItem);
+            _charges.RemoveAll(x => !x.InputCharge);
             _reverseRates.Clear();
         }
 

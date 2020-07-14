@@ -3,16 +3,15 @@ using SimpleCalculator.Api.Contracts;
 using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.ValueObjects;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SimpleCalculator.Api.RequestHandlers
 {
-    public class ForwardCalculatorRequestHandler : IRequestHandler<ForwardCalculatorRequest, IEnumerable<OrderChargeResponse>>
+    public class ForwardCalculatorRequestHandler : IRequestHandler<ForwardCalculatorRequest, OrderResponse>
     {
-        public Task<IEnumerable<OrderChargeResponse>> Handle(ForwardCalculatorRequest request, CancellationToken cancellationToken)
+        public Task<OrderResponse> Handle(ForwardCalculatorRequest request, CancellationToken cancellationToken)
         {
             // Add initial charges
             foreach (var item in request.Order.OrderItems)
@@ -37,16 +36,7 @@ namespace SimpleCalculator.Api.RequestHandlers
             // Run calculator
             calculator?.Invoke(request.Order);
 
-            // Add a total charge for visibility
-            foreach (var item in request.Order.OrderItems)
-            {
-                var totalItemCharge = item.GetTotalCalculatedCharge(request.Order.Currency);
-                item.AddCharge(totalItemCharge);
-            }
-
-            return Task.FromResult(request.Order.Charges
-                .OrderBy(c => c.BaseChargeName.Value)
-                .Select(c => new OrderChargeResponse(c.ChargeName, c.ChargeAmount)));
+            return Task.FromResult(new OrderResponse(request.Order));
         }
     }
 }
