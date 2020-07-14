@@ -14,6 +14,16 @@ namespace SimpleCalculator.Api.RequestHandlers
     {
         public Task<IEnumerable<OrderChargeResponse>> Handle(ForwardCalculatorRequest request, CancellationToken cancellationToken)
         {
+            // Add initial charges
+            foreach (var item in request.Order.OrderItems)
+            {
+                var inputItemPrice = item.GetChargeAmount(ChargeNames.InputItem, request.Order.Currency);
+                var inputDeliveryPrice = item.GetChargeAmount(ChargeNames.InputDelivery, request.Order.Currency);
+
+                item.AddCharge(new OrderCharge(ChargeNames.Item, inputItemPrice, ChargeNames.Item));
+                item.AddCharge(new OrderCharge(ChargeNames.Delivery, inputDeliveryPrice, ChargeNames.Delivery));
+            };
+
             // Determine deminimis base
             var deminimisBase = request.Order.Charges.Where(chargeName => request.CalculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
                 .Select(x => x.ChargeAmount.Value).Sum();
@@ -23,15 +33,6 @@ namespace SimpleCalculator.Api.RequestHandlers
 
             // Create a forward calculator for the selected range
             var calculator = ForwardCalculatorFactory.Create(range);
-
-            foreach (var item in request.Order.OrderItems)
-            {
-                var inputItemPrice = item.GetChargeAmount(ChargeNames.InputItem, request.Order.Currency);
-                var inputDeliveryPrice = item.GetChargeAmount(ChargeNames.InputDelivery, request.Order.Currency);
-
-                item.AddCharge(new OrderCharge(ChargeNames.Item, inputItemPrice, ChargeNames.Item));
-                item.AddCharge(new OrderCharge(ChargeNames.Delivery, inputDeliveryPrice, ChargeNames.Delivery));
-            };
 
             // Run calculator
             calculator?.Invoke(request.Order);

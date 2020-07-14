@@ -10,7 +10,7 @@
           "ChargeName": "Duty",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Delivery" ],
-          "DeminimisThreshold": "EUR0"
+          "DeminimisThreshold": "EUR201"
         },
         {
           "ChargeName": "Vat",
@@ -31,12 +31,12 @@
     // All charges are on top of other charges
     {
       "Id": "BB",
-      "DeminimisBaseCharges": [ "Item" ],
+      "DeminimisBaseCharges": [ "Item", "Delivery" ],
       "ChargeConfigurations": [
         {
           "ChargeName": "Duty",
           "CalculationType": "RateBased",
-          "BaseCharges": [ "Item" ],
+          "BaseCharges": [ "Item", "Delivery" ],
           "DeminimisThreshold": "EUR0"
         },
         {
