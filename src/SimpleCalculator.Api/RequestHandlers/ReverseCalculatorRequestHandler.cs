@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using SimpleCalculator.Api.Contracts;
-using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Factories;
 using SimpleCalculator.Domain.ValueObjects;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace SimpleCalculator.Api.RequestHandlers
             foreach (var range in request.CalculatorConfiguration.CalculationRanges.Reverse())
             {
                 // Create reverse calc using range
-                var reverseCalculator = ReverseCalculatorFactory.Create(range);
+                var reverseCalculator = ReverseCalculatorFactory.Create(range, request.CalculatorConfiguration.DeminimisBaseCharges);
 
                 // Run reverse calc
                 reverseCalculator?.Invoke(request.Order);
@@ -30,14 +29,22 @@ namespace SimpleCalculator.Api.RequestHandlers
                 forwardCalculator?.Invoke(request.Order);
 
                 // Get and compare charges
-                var inputCharge = request.Order.GetChargeAmount(ChargeNames.InputItem, request.Order.Currency);
-                var totalCharge = request.Order.GetTotalCalculatedCharge();
+                var totalCalculatedChargeAmount = request.Order.Charges
+                    .Where(x => !x.IsInputCharge)
+                    .Select(x => x.ChargeAmount)
+                    .Sum(request.Order.Currency);
 
+                var totalInputChargeAmount = request.Order.Charges
+                    .Where(x => x.IsInputCharge)
+                    .Select(x => x.ChargeAmount)
+                    .Sum(request.Order.Currency);
+                
                 // Determine deminimis base
-                var deminimisBase = request.Order.Charges.Where(chargeName => request.CalculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
+                var deminimisBase = request.Order.Charges
+                    .Where(chargeName => request.CalculatorConfiguration.DeminimisBaseCharges.Contains(chargeName.ChargeName))
                     .Select(x => x.ChargeAmount.Value).Sum();
 
-                if (inputCharge == totalCharge.ChargeAmount && new Price(request.Order.Currency, deminimisBase) >= range.DeminimisThreshold)
+                if (totalInputChargeAmount == totalCalculatedChargeAmount && new Price(request.Order.Currency, deminimisBase) >= range.DeminimisThreshold)
                     break;
 
                 // if charges don't match reset and run again

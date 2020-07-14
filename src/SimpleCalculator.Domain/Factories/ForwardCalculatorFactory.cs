@@ -6,7 +6,6 @@ using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Exceptions;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;
-using System.Linq;
 
 namespace SimpleCalculator.Domain.Factories
 {

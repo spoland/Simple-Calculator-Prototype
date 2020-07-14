@@ -6,7 +6,8 @@ using SimpleCalculator.Domain.Entities;
 using SimpleCalculator.Domain.Exceptions;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.Models.ChargeConfigurations;
-using System.Linq;
+using SimpleCalculator.Domain.ValueObjects;
+using System.Collections.Generic;
 
 namespace SimpleCalculator.Domain.Factories
 {
@@ -14,7 +15,7 @@ namespace SimpleCalculator.Domain.Factories
     {
         public delegate void Calculator(Order order);
 
-        public static Calculator? Create(CalculationRange range)
+        public static Calculator? Create(CalculationRange range, IEnumerable<ChargeName> deminimisBaseCharges)
         {
             Calculator? calculatorDelegate = null;
 
@@ -24,7 +25,6 @@ namespace SimpleCalculator.Domain.Factories
 
                 switch (config)
                 {
-
                     // FIXED RATE CONFIGURATIONS
                     case FixedRateChargeConfiguration fixedChargeConfig when config is FixedRateChargeConfiguration:
                         {
@@ -52,17 +52,17 @@ namespace SimpleCalculator.Domain.Factories
                     // RATE BASED CONFIGURATIONS
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.Rate != null:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => rateBasedChargeConfig.Rate, rateBasedChargeConfig.BaseCharges);
                             break;
                         }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Duty:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.DutyRate, rateBasedChargeConfig.BaseCharges);
                             break;
                         }
                     case RateBasedChargeConfiguration rateBasedChargeConfig when config is RateBasedChargeConfiguration && rateBasedChargeConfig.ChargeName.Value is ChargeNames.Vat:
                         {
-                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseChargeConfigurations.Select(x => x.ChargeName));
+                            calculator = new ReverseRateCalculator(rateBasedChargeConfig.ChargeName, (oi) => oi.VatRate, rateBasedChargeConfig.BaseCharges);
                             break;
                         }
 
@@ -74,8 +74,11 @@ namespace SimpleCalculator.Domain.Factories
                 calculatorDelegate += calculator.Calculate;
             }
 
-            // Add the item price calculator last
-            calculatorDelegate += new ReverseItemPriceCalculator().Calculate;
+            foreach(var deminimisBaseCharge in deminimisBaseCharges)
+            {
+                // Add the item price calculator last
+                calculatorDelegate += new ReversePriceCalculator(deminimisBaseCharge, $"Input{deminimisBaseCharge}").Calculate;
+            }
 
             return calculatorDelegate;
         }

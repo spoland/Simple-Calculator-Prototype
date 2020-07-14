@@ -13,12 +13,16 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// <param name="name"></param>
         /// <param name="amount"></param>
         /// <param name="baseChargeName"></param>
-        public OrderCharge(ChargeName name, Price amount, ChargeName baseChargeName)
+        public OrderCharge(
+            ChargeName name,
+            Price amount,
+            ChargeName baseChargeName,
+            bool isInputCharge = false)
         {
             ChargeName = name;
-            BaseChargeName = baseChargeName;
-
             ChargeAmount = amount;
+            BaseChargeName = baseChargeName;
+            IsInputCharge = isInputCharge;
         }
 
         /// <summary>
@@ -38,7 +42,9 @@ namespace SimpleCalculator.Domain.ValueObjects
         /// <summary>
         /// The charge.
         /// </summary>
-        public Price ChargeAmount { get; set; }
+        public Price ChargeAmount { get; }
+
+        public bool IsInputCharge { get; }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

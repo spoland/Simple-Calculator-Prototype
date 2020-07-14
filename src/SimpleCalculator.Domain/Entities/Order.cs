@@ -20,7 +20,7 @@ namespace SimpleCalculator.Domain.Entities
 
             TotalOrderPrice = orderItems.Select(oi => oi.GetChargeAmount(ChargeNames.InputItem, currency)).Sum(currency);
 
-            AddCharge(new OrderCharge(ChargeNames.InputDelivery, deliveryPrice, ChargeNames.InputDelivery));
+            AddCharge(new OrderCharge(ChargeNames.InputDelivery, deliveryPrice, ChargeNames.InputDelivery, isInputCharge: true));
 
             Id = new OrderId(Guid.NewGuid().ToString());
         }
@@ -68,12 +68,6 @@ namespace SimpleCalculator.Domain.Entities
             _orderItems.ForEach(oi => oi.RemoveCharge(chargeName));
         }
 
-        public OrderCharge GetTotalCalculatedCharge()
-        {
-            var totalOrderCharges = OrderItems.Select(oi => oi.GetTotalCalculatedCharge(Currency)).Select(x => x.ChargeAmount).Sum(Currency);
-            return new OrderCharge("Total", totalOrderCharges, "Total");
-        }
-
         public void ResetCalculationProperties()
         {
             foreach (var item in OrderItems) item.ResetCalculationProperties();
@@ -84,8 +78,12 @@ namespace SimpleCalculator.Domain.Entities
 
         public void AddCharge(OrderCharge charge)
         {
-            _orderItems.ForEach(oi =>
-                oi.AddCharge(new OrderCharge(charge.ChargeName, new Price(charge.ChargeAmount.Currency, charge.ChargeAmount.Value * RelativeOrderItemValue(oi)), charge.BaseChargeName)));
+            _orderItems.ForEach(oi => oi.AddCharge(
+                new OrderCharge(
+                    charge.ChargeName,
+                    new Price(charge.ChargeAmount.Currency, charge.ChargeAmount.Value * RelativeOrderItemValue(oi)),
+                    charge.BaseChargeName,
+                    charge.IsInputCharge)));
         }
 
         private Price TotalOrderPrice;
