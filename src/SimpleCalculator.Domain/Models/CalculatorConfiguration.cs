@@ -12,6 +12,8 @@ namespace SimpleCalculator.Domain.Models
     /// </summary>
     public class CalculatorConfiguration
     {
+        private List<GreyZone> _greyZones = new List<GreyZone>();
+
         /// <summary>
         /// Creates a new <see cref="CalculatorConfiguration"/> based on a <see cref="CalculatorConfigurationOptions"/> object.
         /// </summary>
@@ -45,6 +47,24 @@ namespace SimpleCalculator.Domain.Models
         /// A collection of <see cref="CalculationRange"/> objects.
         /// </summary>
         public IEnumerable<CalculationRange> CalculationRanges { get; }
+
+        /// <summary>
+        /// A collection of <see cref="CalculationRange"/> objects.
+        /// </summary>
+        public IEnumerable<GreyZone> GreyZones => _greyZones;
+
+        public void AddGreyZone(GreyZone greyZone) => _greyZones.Add(greyZone);
+
+        public bool InputPriceInGreyZone(Price price, out CalculationRange? calculationRange) 
+        {
+            calculationRange = default;
+            if (!_greyZones.Any(x => x.IsInGreyZone(price))) return false;
+
+            var greyZone = _greyZones.Single(x => x.IsInGreyZone(price));
+            calculationRange = greyZone.CalculationRange;
+
+            return true;
+        }
 
         /// <summary>
         /// A collection of the names of the charges which make up the base price for calculations.

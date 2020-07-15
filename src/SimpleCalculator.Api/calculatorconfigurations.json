@@ -4,7 +4,7 @@
     // No charges are on top of any other charge
     {
       "Id": "AA",
-      "DeminimisBaseCharges": [ "Item" ],
+      "DeminimisBaseCharges": [ "Item", "Delivery" ],
       "ChargeConfigurations": [
         {
           "ChargeName": "Duty",
@@ -131,7 +131,7 @@
           "ChargeName": "Vat",
           "CalculationType": "RateBased",
           "BaseCharges": [ "Item", "Duty" ],
-          "Rate": 20,
+          "Rate": 30,
           "DeminimisThreshold": "EUR100"
         },
         {

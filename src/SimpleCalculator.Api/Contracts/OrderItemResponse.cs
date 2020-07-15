@@ -8,7 +8,10 @@ namespace SimpleCalculator.Api.Contracts
     {
         public OrderItemResponse(IEnumerable<OrderCharge> charges)
         {
-            Charges = charges.Select(x => new OrderChargeResponse(x.ChargeName, x.ChargeAmount));
+            Charges = charges
+                .Where(x => !x.InputCharge)
+                .Select(x => new OrderChargeResponse(x.ChargeName, x.ChargeAmount))
+                .OrderBy(x => x.Name);
         }
 
         public IEnumerable<OrderChargeResponse> Charges { get; }

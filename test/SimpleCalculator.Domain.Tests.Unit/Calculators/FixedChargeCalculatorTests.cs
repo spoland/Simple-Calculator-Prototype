@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SimpleCalculator.Domain.Calculators;
+using SimpleCalculator.Domain.Constants;
 using SimpleCalculator.Domain.Models;
 using SimpleCalculator.Domain.ValueObjects;
 using SimpleCalculator.Tests.Shared.Builders;
@@ -11,7 +12,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
 {
     public class FixedChargeCalculatorTests
     {
-        private const string ChargeName = "FixedCharge";
+        private const string _chargeName = "FixedCharge";
         private readonly OrderBuilder _orderBuilder;
         private readonly OrderItemBuilder _orderItemBuilder;
 
@@ -27,8 +28,9 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             // Arrange
             var orderItem = _orderItemBuilder.Build();
             var order = _orderBuilder.WithOrderItems(new List<OrderItem> { orderItem }).Build();
+            var expectedChargeName = ChargeName.FromBaseChargeName(_chargeName, ChargeNames.Item);
 
-            var sut = new FixedChargeCalculator(ChargeName, new Price(CurrencyFakes.EUR, 10));
+            var sut = new FixedChargeCalculator(_chargeName, new Price(CurrencyFakes.EUR, 10));
 
             // Act
             sut.Calculate(order);
@@ -36,7 +38,7 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             // Assert
             orderItem.Charges.Should()
                 .HaveCount(3).And
-                .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 10);
+                .ContainSingle(c => c.ChargeName.Value == expectedChargeName && c.ChargeAmount.Value == 10);
         }
 
         [Fact]
@@ -46,8 +48,9 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             var orderItem1 = _orderItemBuilder.WithPrice("EUR", 25m).Build();
             var orderItem2 = _orderItemBuilder.WithPrice("EUR", 75m).Build();
             var order = _orderBuilder.WithOrderItems(new List<OrderItem> { orderItem1, orderItem2 }).Build();
+            var expectedChargeName = ChargeName.FromBaseChargeName(_chargeName, ChargeNames.Item);
 
-            var sut = new FixedChargeCalculator(ChargeName, new Price(CurrencyFakes.EUR, 20));
+            var sut = new FixedChargeCalculator(_chargeName, new Price(CurrencyFakes.EUR, 20));
 
             // Act
             sut.Calculate(order);
@@ -55,10 +58,10 @@ namespace SimpleCalculator.Domain.Tests.Unit.Calculators
             // Assert
             orderItem1.Charges.Should()
                 .HaveCount(3).And
-                .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 5);
+                .ContainSingle(c => c.ChargeName.Value == expectedChargeName && c.ChargeAmount.Value == 5);
             orderItem2.Charges.Should()
                 .HaveCount(3).And
-                .ContainSingle(c => c.ChargeName.Value == ChargeName && c.ChargeAmount.Value == 15);
+                .ContainSingle(c => c.ChargeName.Value == expectedChargeName && c.ChargeAmount.Value == 15);
         }
     }
 }

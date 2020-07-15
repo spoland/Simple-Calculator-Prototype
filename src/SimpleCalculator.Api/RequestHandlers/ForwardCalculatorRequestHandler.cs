@@ -36,6 +36,24 @@ namespace SimpleCalculator.Api.RequestHandlers
             // Run calculator
             calculator?.Invoke(request.Order);
 
+            foreach(var item in request.Order.OrderItems)
+            {
+                var totalItemPrice = item.Charges
+                    .Where(x => !x.InputCharge)
+                    .Where(x => x.ChargeName.Value.EndsWith("Item"))
+                    .Select(x => x.ChargeAmount.Value)
+                    .Sum();
+
+                var totalDeliveryPrice = item.Charges
+                    .Where(x => !x.InputCharge)
+                    .Where(x => x.ChargeName.Value.EndsWith("Delivery"))
+                    .Select(x => x.ChargeAmount.Value)
+                    .Sum();
+
+                item.AddCharge(new OrderCharge("TotalItem", new Price(request.Order.Currency, totalItemPrice), "TotalItem"));
+                item.AddCharge(new OrderCharge("TotalDelivery", new Price(request.Order.Currency, totalDeliveryPrice), "TotalDelivery"));
+            }
+
             return Task.FromResult(new OrderResponse(request.Order));
         }
     }
