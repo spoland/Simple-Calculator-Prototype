@@ -2,16 +2,15 @@
 
 A simpler duties and taxes calculator prototype.
 
-## What works (mostly 😃)
+## What works
 
-- Forward and reverse calculations that don't fall into grey zones.
+- Forward and reverse calculations, including grey zone detection and handling
 - Weight based, rate based and fixed rate calculations.
 - Minimum payable and minimum collectible constraints.
-- Item excess.
 
 ## Current gaps
 
-The calculator has not yet been configured to  handle grey zones, and most likely won't correctly reverse out constraints in all cases.
+Additional testing potentially needed on grey zones when minimum payable and minimum collectible are involved.
 
 ## Endpoints
 
