@@ -21,15 +21,15 @@ Sample Contract:
 
 ```json
 {
-  "id": "123",
-  "countryIso": "IE",
-  "currencyIso": "EUR",
+  "declarationCountry": "IE",
+  "deliveryPrice": "EUR100",
+  "currency": "EUR",
   "orderItems": [
     {
       "quantity": 1,
       "weight": 1,
       "vatRate": 7,
-      "dutyRate": 10,
+      "dutyRate": 12,
       "price": "EUR100"
     }
   ]
